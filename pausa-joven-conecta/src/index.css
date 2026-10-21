@@ -1,111 +1,106 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bg: #f5f4fa;
+  --surface: #ffffff;
+  --surface-alt: #f1eff9;
+  --text: #4b4459;
+  --text-strong: #191530;
+  --muted: #6f6880;
+  --border: #e3dff1;
+  --accent: #6d3ce0;
+  --accent-strong: #5330b5;
+  --accent-soft: rgba(109, 60, 224, 0.12);
+  --teal: #0f7d77;
+  --teal-soft: rgba(15, 125, 119, 0.14);
+  --warning: #a4550b;
+  --warning-soft: rgba(164, 85, 11, 0.12);
+  --shadow-sm: 0 1px 2px rgba(25, 21, 48, 0.08);
+  --shadow-md: 0 14px 30px -20px rgba(25, 21, 48, 0.4);
+  --radius: 14px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --sans: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  color-scheme: light;
+  font: 16px/1.55 var(--sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+    --bg: #14131c;
+    --surface: #1d1b28;
+    --surface-alt: #262335;
+    --text: #b6b1c6;
+    --text-strong: #f3f1fb;
+    --muted: #9a94ac;
+    --border: #322e44;
+    --accent: #b394ff;
+    --accent-strong: #cdb3ff;
+    --accent-soft: rgba(179, 148, 255, 0.16);
+    --teal: #5ed6cd;
+    --teal-soft: rgba(94, 214, 205, 0.16);
+    --warning: #f0b27a;
+    --warning-soft: rgba(240, 178, 122, 0.16);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 16px 34px -22px rgba(0, 0, 0, 0.9);
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+    color-scheme: dark;
   }
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  min-height: 100svh;
+  background:
+    radial-gradient(1200px 500px at 15% -10%, var(--accent-soft), transparent 70%),
+    radial-gradient(900px 400px at 100% 0%, var(--teal-soft), transparent 70%),
+    var(--bg);
+  color: var(--text);
+}
+
+#root {
+  min-height: 100svh;
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3 {
+  margin: 0;
+  color: var(--text-strong);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
 p {
   margin: 0;
 }
 
-code,
-.counter {
+code {
   font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+  font-size: 0.85em;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+a {
+  color: var(--accent);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
