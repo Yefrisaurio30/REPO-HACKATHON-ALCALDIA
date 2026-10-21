@@ -81,11 +81,12 @@ export default function Services() {
       />
 
       <Callout tone="demo" title="DATOS FICTICIOS DE DEMOSTRACIÓN">
-        Los registros de este directorio son ficticios: sirven para probar el
-        buscador y los filtros. No corresponden a instituciones reales de
-        Villavicencio, no tienen datos de contacto confirmados y no deben usarse
-        para tomar decisiones. Hay {services.length} registros de ejemplo cargados
-        en el prototipo.
+        La mayoría de registros de este directorio son ficticios: sirven para
+        probar el buscador y los filtros, no corresponden a instituciones
+        reales y no deben usarse para tomar decisiones. Los registros reales
+        están etiquetados como «Pendiente de verificación» y muestran un aviso
+        antes de cada contacto. Hay {services.length} registros cargados en el
+        prototipo.
       </Callout>
 
       <section className="section" aria-labelledby="titulo-resultados">
