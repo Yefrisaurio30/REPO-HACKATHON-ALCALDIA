@@ -109,8 +109,8 @@ scripts/
 - Etiquetas visibles en todos los controles, `aria-live` en los contadores de
   resultados y errores de formulario con `role="alert"` y `aria-invalid`.
 - `prefers-reduced-motion` respetado y contraste verificado (Lighthouse
-  Accessibility 1.0 en todas las páginas; reproducible con
-  `npx lighthouse http://localhost:4173 --only-categories=accessibility`).
+  Accessibility **0.96** / 96 en la página principal de la build de producción;
+  reproducible con `npx lighthouse http://localhost:4173 --only-categories=accessibility`).
 - El formulario de reporte **no envía datos a ningún servidor**, no guarda nada
   en el dispositivo y no solicita información sensible.
 - Enlace externo con `target="_blank"` y `rel="noopener noreferrer external"`.
