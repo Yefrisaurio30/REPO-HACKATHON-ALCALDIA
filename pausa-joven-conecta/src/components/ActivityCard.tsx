@@ -1,7 +1,11 @@
-import { formatLongDate, isPastActivity } from '../data'
-import { ACTIVITY_CATEGORY_LABELS, MODALITY_LABELS, VERIFICATION_LABELS } from '../data/labels'
+import { ACTIVITY_CATEGORY_LABELS, MODALITY_LABELS } from '../data/labels'
+import { formatMediumDate, formatTime, isPastActivity } from '../data'
+import { activityPath } from '../router/routes'
+import { Link } from '../router'
 import type { Activity } from '../types'
 import DemoBadge from './DemoBadge'
+import Icon from './Icon'
+import VerificationBadge from './VerificationBadge'
 
 type ActivityCardProps = {
   activity: Activity
@@ -16,46 +20,56 @@ export default function ActivityCard({ activity, now }: ActivityCardProps) {
   return (
     <article
       className="card activity-card"
-      id={activity.id}
       data-activity-id={activity.id}
       data-status={isPast ? 'finalizada' : 'programada'}
     >
-      <header className="card-head">
-        <div>
-          <h3>{activity.title}</h3>
-          <p className="organizer">{activity.organizer}</p>
-        </div>
+      <div className="card-topline">
+        <span className="chip chip-purple">{ACTIVITY_CATEGORY_LABELS[activity.category]}</span>
         {activity.isDemo ? <DemoBadge /> : null}
-      </header>
+      </div>
 
+      <h3 className="card-title">
+        <Link to={activityPath(activity.id)}>{activity.title}</Link>
+      </h3>
+
+      <p className="organizer">{activity.organizer}</p>
       <p className="card-description">{activity.description}</p>
 
-      <ul className="tags">
-        <li className="tag tag-category">{ACTIVITY_CATEGORY_LABELS[activity.category]}</li>
-        <li className="tag">{MODALITY_LABELS[activity.modality]}</li>
-        <li className={`tag ${isPast ? 'tag-past' : 'tag-next'}`}>
-          {isPast ? 'Finalizada' : 'Programada'}
+      <ul className="card-meta">
+        <li>
+          <Icon name="calendar" size={16} />
+          <span>
+            <span className="meta-label">Fecha</span>
+            {formatMediumDate(activity.date)}
+          </span>
+        </li>
+        <li>
+          <Icon name="clock" size={16} />
+          <span>
+            <span className="meta-label">Hora</span>
+            {formatTime(activity.time)}
+          </span>
+        </li>
+        <li>
+          <Icon name="pin" size={16} />
+          <span>
+            <span className="meta-label">Lugar</span>
+            {activity.location ?? MODALITY_LABELS[activity.modality]}
+          </span>
         </li>
       </ul>
 
-      <dl className="card-meta">
-        <div>
-          <dt>Fecha</dt>
-          <dd>{formatLongDate(activity.date)}</dd>
-        </div>
-        <div>
-          <dt>Hora</dt>
-          <dd>{activity.time} h</dd>
-        </div>
-        <div>
-          <dt>Lugar</dt>
-          <dd>{activity.location ?? 'Lugar por definir (simulado)'}</dd>
-        </div>
-      </dl>
-
       <footer className="card-foot">
-        <code className="record-id">{activity.id}</code>
-        <span className="verification">{VERIFICATION_LABELS[activity.verificationStatus]}</span>
+        <span className={`state-chip ${isPast ? 'state-past' : 'state-next'}`}>
+          {isPast ? 'Finalizada' : 'Programada'}
+        </span>
+        <span className="card-foot-right">
+          <VerificationBadge status={activity.verificationStatus} compact />
+          <Link className="card-link" to={activityPath(activity.id)}>
+            Ver actividad
+            <Icon name="arrow-right" size={16} />
+          </Link>
+        </span>
       </footer>
     </article>
   )

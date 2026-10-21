@@ -1,0 +1,4 @@
+# Prototipo de demostración (Hackathon Villavicencio 2026).
+# Los datos son ficticios, por eso el prototipo no se indexa.
+User-agent: *
+Disallow: /

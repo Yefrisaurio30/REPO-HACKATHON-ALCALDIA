@@ -3,6 +3,14 @@
  * Uso: npm run validate:data
  *
  * No requiere dependencias externas: solo usa Node.js.
+ *
+ * Reglas de seguridad del proyecto:
+ *  - Todos los registros son ficticios (`isDemo: true`) y su estado nunca es
+ *    `verificado`, porque no se ha consultado ninguna fuente real.
+ *  - Los enlaces solo pueden apuntar al dominio reservado `demo.example`,
+ *    que por definición nunca resuelve (RFC 2606).
+ *  - Los contactos de ejemplo deben contener la palabra «ejemplo» y un
+ *    correo del mismo dominio reservado. Nunca hay teléfonos reales.
  */
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -10,6 +18,10 @@ import { dirname, join } from 'node:path'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const dataDir = join(here, '..', 'src', 'data')
+
+/** Dominio reservado para ejemplos: nunca resuelve en internet. */
+const DEMO_DOMAIN = 'demo.example'
+const DEMO_URL_PREFIX = `https://${DEMO_DOMAIN}/`
 
 const SERVICE_CATEGORIES = new Set([
   'orientacion',
@@ -30,6 +42,7 @@ const ACTIVITY_CATEGORIES = new Set([
 ])
 
 const MODALITIES = new Set(['presencial', 'virtual', 'telefonica'])
+const VERIFICATION_STATUSES = new Set(['demo', 'pendiente'])
 
 const errors = []
 const warnings = []
@@ -61,6 +74,13 @@ function checkText(value, where) {
   }
 }
 
+/** Detecta números que podrían ser un teléfono real. */
+function checkNoPhoneLike(value, where) {
+  if (typeof value === 'string' && /\d{3}[\s-]?\d{3}[\s-]?\d{4}/.test(value)) {
+    fail(`${where}: parece contener un teléfono real`)
+  }
+}
+
 const SERVICE_FIELDS = [
   'id',
   'name',
@@ -74,6 +94,7 @@ const SERVICE_FIELDS = [
   'lastVerified',
   'verificationStatus',
   'isDemo',
+  'notes',
 ]
 
 const ACTIVITY_FIELDS = [
@@ -86,10 +107,13 @@ const ACTIVITY_FIELDS = [
   'time',
   'location',
   'modality',
+  'requirements',
   'sourceUrl',
   'registrationUrl',
+  'lastVerified',
   'verificationStatus',
   'isDemo',
+  'notes',
 ]
 
 function checkCommon(record, fileName, requiredFields) {
@@ -104,8 +128,10 @@ function checkCommon(record, fileName, requiredFields) {
   if (typeof record.id !== 'string' || !record.id.trim()) {
     fail(`${where}: id ausente o vacío`)
   }
-  if (record.verificationStatus !== 'demo') {
-    fail(`${where}: verificationStatus debe ser "demo" (es ${record.verificationStatus})`)
+  if (!VERIFICATION_STATUSES.has(record.verificationStatus)) {
+    fail(
+      `${where}: verificationStatus debe ser "demo" o "pendiente" en datos de demostración (es ${record.verificationStatus})`,
+    )
   }
   if (record.isDemo !== true) {
     fail(`${where}: isDemo debe ser true (es ${record.isDemo})`)
@@ -127,23 +153,31 @@ function checkUniqueIds(records, fileName) {
   return seen.size
 }
 
-function checkNoRealContacts(record, where) {
-  for (const field of ['contact', 'sourceUrl', 'registrationUrl']) {
-    if (field in record && record[field] !== null) {
-      fail(`${where}: "${field}" debe ser null en datos de demostración (es ${JSON.stringify(record[field])})`)
-    }
+/** Los enlaces de demostración solo pueden usar el dominio reservado. */
+function checkDemoUrl(value, where, field) {
+  if (value === null || value === undefined) return
+  if (typeof value !== 'string' || !value.startsWith(DEMO_URL_PREFIX)) {
+    fail(
+      `${where}: "${field}" debe ser null o empezar por ${DEMO_URL_PREFIX} (dominio reservado que nunca resuelve)`,
+    )
   }
-  if (record.contact !== null && record.contact !== undefined) {
-    if (/\d{3}/.test(String(record.contact))) {
-      fail(`${where}: "contact" parece un teléfono real`)
-    }
+}
+
+/** El contacto de ejemplo debe ser claramente ficticio. */
+function checkDemoContact(value, where) {
+  if (value === null || value === undefined) return
+  if (typeof value !== 'string' || !value.trim()) {
+    fail(`${where}: "contact" vacío`)
+    return
   }
-  if (record.sourceUrl !== null && record.sourceUrl !== undefined) {
-    fail(`${where}: "sourceUrl" debe ser null en datos de demostración`)
+  const lowered = value.toLowerCase()
+  if (!lowered.includes('ejemplo')) {
+    fail(`${where}: "contact" debe dejar claro que es un ejemplo (falta la palabra "ejemplo")`)
   }
-  if ('registrationUrl' in record && record.registrationUrl !== null) {
-    fail(`${where}: "registrationUrl" debe ser null en datos de demostración`)
+  if (!lowered.includes(`@${DEMO_DOMAIN}`)) {
+    fail(`${where}: "contact" debe usar el correo reservado @${DEMO_DOMAIN}`)
   }
+  checkNoPhoneLike(value, `${where}/contact`)
 }
 
 function isValidDate(value) {
@@ -163,6 +197,13 @@ function isValidTime(value) {
   return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59
 }
 
+function checkLastVerified(value, where) {
+  if (value === null || value === undefined) return
+  if (!isValidDate(value)) {
+    fail(`${where}: "lastVerified" inválido "${value}" (se espera YYYY-MM-DD o null)`)
+  }
+}
+
 // ---------------------------------------------------------------- servicios
 const services = await readJson('services.json')
 if (services) {
@@ -173,7 +214,6 @@ if (services) {
 
     for (const service of services) {
       const where = checkCommon(service, 'services.json', SERVICE_FIELDS)
-      checkNoRealContacts(service, where)
 
       if (!SERVICE_CATEGORIES.has(service.category)) {
         fail(`${where}: categoría de servicio desconocida "${service.category}"`)
@@ -182,6 +222,11 @@ if (services) {
       checkText(service.description, `${where}/description`)
       checkText(service.targetAudience, `${where}/targetAudience`)
       if (service.location !== null) checkText(service.location, `${where}/location`)
+      if (service.notes !== null) checkText(service.notes, `${where}/notes`)
+      checkDemoContact(service.contact, where)
+      checkDemoUrl(service.sourceUrl, where, 'sourceUrl')
+      checkLastVerified(service.lastVerified, where)
+      checkNoPhoneLike(service.description, `${where}/description`)
       if (service.description.trim().length < 40) {
         warn(`${where}: descripción demasiado corta para probar búsquedas`)
       }
@@ -203,10 +248,11 @@ if (activities) {
     const now = new Date()
     let past = 0
     let future = 0
+    let earliest = null
+    let latest = null
 
     for (const activity of activities) {
       const where = checkCommon(activity, 'activities.json', ACTIVITY_FIELDS)
-      checkNoRealContacts(activity, where)
 
       if (!ACTIVITY_CATEGORIES.has(activity.category)) {
         fail(`${where}: categoría de actividad desconocida "${activity.category}"`)
@@ -221,6 +267,17 @@ if (activities) {
       checkText(activity.description, `${where}/description`)
       checkText(activity.organizer, `${where}/organizer`)
       if (activity.location !== null) checkText(activity.location, `${where}/location`)
+      if (activity.requirements !== null) checkText(activity.requirements, `${where}/requirements`)
+      if (activity.notes !== null) checkText(activity.notes, `${where}/notes`)
+      checkDemoUrl(activity.sourceUrl, where, 'sourceUrl')
+      checkDemoUrl(activity.registrationUrl, where, 'registrationUrl')
+      checkLastVerified(activity.lastVerified, where)
+      checkNoPhoneLike(activity.description, `${where}/description`)
+
+      if (isValidDate(activity.date)) {
+        if (!earliest || activity.date < earliest) earliest = activity.date
+        if (!latest || activity.date > latest) latest = activity.date
+      }
 
       if (isValidDate(activity.date) && isValidTime(activity.time)) {
         const start = new Date(`${activity.date}T${activity.time}:00`)
@@ -230,11 +287,18 @@ if (activities) {
     }
 
     const unique = checkUniqueIds(activities, 'activities.json')
-    if (past === 0) fail('activities.json: se requiere al menos una actividad pasada')
-    if (future === 0) fail('activities.json: se requiere al menos una actividad futura')
+    if (past === 0) {
+      warn('activities.json: no hay actividades ya realizadas (la ventana de datos es fija)')
+    }
+    if (future === 0) {
+      warn(
+        `activities.json: no hay actividades futuras con la fecha de hoy (la ventana de datos termina en ${latest})`,
+      )
+    }
     console.log(
       `activities.json -> ${activities.length} actividades, ${unique} ids únicos, ${past} pasadas y ${future} futuras`,
     )
+    console.log(`                 ventana de datos: ${earliest} → ${latest}`)
   }
 }
 
