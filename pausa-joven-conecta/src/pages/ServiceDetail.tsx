@@ -19,7 +19,7 @@ export default function ServiceDetail() {
         <h1 className="page-title">No encontramos ese servicio</h1>
         <p className="page-description">
           El enlace puede estar incompleto o el registro ya no está en el
-          directorio de demostración.
+          directorio.
         </p>
         <Link className="btn btn-primary" to="/servicios">
           Volver al directorio

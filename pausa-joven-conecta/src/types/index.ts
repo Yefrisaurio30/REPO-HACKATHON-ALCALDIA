@@ -6,15 +6,18 @@
  * de cada registro.
  *
  * Reglas del proyecto (ver `scripts/validate-data.mjs`):
- *  - Todo registro del prototipo es ficticio: `isDemo` es `true`.
+ *  - Los registros ficticios declaran `isDemo: true`; los reales, `isDemo: false`.
  *  - `verificationStatus` describe el estado de verificación de la fuente:
  *      - `demo`      → registro ficticio, sin fuente real consultada.
  *      - `pendiente` → se tiene un dato (por ejemplo un contacto) que aún no
  *                      se ha podido confirmar contra una fuente oficial.
- *      - `verificado`→ la fuente oficial se consultó y el dato está vigente.
- *                      reservado para cuando existan fuentes reales.
- *  - `sourceUrl` y `registrationUrl` de registros de demostración solo pueden
- *    apuntar al dominio reservado `demo.example`, que nunca resuelve.
+ *      - `verificado`→ la fuente oficial se consultó y el dato está vigente;
+ *                      exige `lastVerified` con fecha de consulta.
+ *  - Un registro real sin fecha de consulta debe quedar en `pendiente` con
+ *    notas: nunca se publica un teléfono como vigente sin fuente y fecha.
+ *  - Los `sourceUrl` y `registrationUrl` de registros ficticios solo pueden
+ *    apuntar al dominio reservado `demo.example`, que nunca resuelve; los de
+ *    registros reales deben ser una fuente oficial `https://`.
  */
 
 export type ServiceCategory =
