@@ -30,6 +30,19 @@ export default function ServiceDetail() {
 
   const related = getRelatedServices(service)
 
+  // URL de WhatsApp limpia (solo dígitos) para abrir wa.me.
+  const whatsappUrl = service.contactStructured?.whatsapp
+    ? `https://wa.me/${service.contactStructured.whatsapp.replace(/[^\d]/g, '')}`
+    : null
+
+  // URL tel: para llamada. Usa el teléfono estructurado o, en su defecto,
+  // el contacto libre cuando no es un correo.
+  const telUrl = service.contactStructured?.phone
+    ? `tel:${service.contactStructured.phone}`
+    : service.contact && !service.contact.includes('@')
+      ? `tel:${service.contact.replace(/[^\d+]/g, '')}`
+      : null
+
   return (
     <>
       <nav className="breadcrumb" aria-label="Ruta de navegación">
@@ -46,6 +59,28 @@ export default function ServiceDetail() {
         <h1 className="detail-title">{service.name}</h1>
         <p className="detail-lead">{service.description}</p>
         <VerificationBadge status={service.verificationStatus} />
+
+        {(telUrl || whatsappUrl) && (
+          <div className="detail-actions" style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+            {telUrl && (
+              <a className="btn btn-primary" href={telUrl}>
+                <Icon name="phone" size={18} />
+                Llamar
+              </a>
+            )}
+            {whatsappUrl && (
+              <a
+                className="btn btn-secondary"
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name="whatsapp" size={18} />
+                Contactar por WhatsApp
+              </a>
+            )}
+          </div>
+        )}
       </header>
 
       <div className="detail-layout">
@@ -64,10 +99,45 @@ export default function ServiceDetail() {
                 <dt>Público destinatario</dt>
                 <dd>{service.targetAudience}</dd>
               </div>
+              {service.city && service.department ? (
+                <div>
+                  <dt>Ciudad / Departamento</dt>
+                  <dd>
+                    {service.city}, {service.department}
+                  </dd>
+                </div>
+              ) : null}
               <div>
                 <dt>Lugar</dt>
                 <dd>{service.location ?? 'Ubicación no informada en la fuente'}</dd>
               </div>
+              {service.contactStructured?.phone ? (
+                <div>
+                  <dt>Teléfono</dt>
+                  <dd>
+                    <a className="detail-contact-value" href={`tel:${service.contactStructured.phone}`}>
+                      <Icon name="phone" size={16} />
+                      {service.contactStructured.phone}
+                    </a>
+                  </dd>
+                </div>
+              ) : null}
+              {service.contactStructured?.whatsapp && whatsappUrl ? (
+                <div>
+                  <dt>WhatsApp</dt>
+                  <dd>
+                    <a
+                      className="detail-contact-value"
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon name="whatsapp" size={16} />
+                      {service.contactStructured.whatsapp}
+                    </a>
+                  </dd>
+                </div>
+              ) : null}
               <div>
                 <dt>Identificador del registro</dt>
                 <dd>
@@ -91,27 +161,30 @@ export default function ServiceDetail() {
             </h2>
 
             {service.contact ? (
-              service.verificationStatus === 'verificado' ? (
-                <p className="detail-contact">
-                  <span className="detail-contact-value">
-                    <Icon name="mail" size={16} />
-                    {service.contact}
-                  </span>
-                  <span className="detail-contact-tag">Dato verificado en la fuente oficial</span>
-                </p>
-              ) : (
-                <Callout tone="warning" title="Contacto sin verificar: no lo tomes como vigente">
-                  <p>
-                    Aparece en el registro de demostración, pero no se ha
-                    confirmado contra una fuente oficial. Confirma antes de ir o
-                    llamar.
+              (() => {
+                const contactIcon = service.contact.includes('@') ? 'mail' : 'phone'
+                return service.verificationStatus === 'verificado' ? (
+                  <p className="detail-contact">
+                    <span className="detail-contact-value">
+                      <Icon name={contactIcon} size={16} />
+                      {service.contact}
+                    </span>
+                    <span className="detail-contact-tag">Dato verificado en la fuente oficial</span>
                   </p>
-                  <p className="detail-contact-value">
-                    <Icon name="mail" size={16} />
-                    {service.contact}
-                  </p>
-                </Callout>
-              )
+                ) : (
+                  <Callout tone="warning" title="Contacto sin verificar: no lo tomes como vigente">
+                    <p>
+                      {service.isDemo
+                        ? 'Aparece en el registro de demostración, pero no se ha confirmado contra una fuente oficial. Confirma antes de ir o llamar.'
+                        : 'Aparece en el registro, pero su vigencia no se ha confirmado contra una fuente oficial. Confirma antes de ir o llamar.'}
+                    </p>
+                    <p className="detail-contact-value">
+                      <Icon name={contactIcon} size={16} />
+                      {service.contact}
+                    </p>
+                  </Callout>
+                )
+              })()
             ) : (
               <Callout tone="info" title="Todavía no hay un contacto confirmado">
                 <p>
@@ -122,6 +195,132 @@ export default function ServiceDetail() {
               </Callout>
             )}
           </section>
+
+          {service.schedule ? (
+            <section className="detail-block" aria-labelledby="horario">
+              <h2 className="detail-block-title" id="horario">
+                <Icon name="clock" size={18} />
+                Horario de atención
+              </h2>
+              <dl className="detail-list">
+                <div>
+                  <dt>Horario</dt>
+                  <dd>{service.schedule.description}</dd>
+                </div>
+                <div>
+                  <dt>Estado</dt>
+                  <dd>
+                    {service.schedule.verified ? (
+                      <span className="chip chip-teal">Verificado</span>
+                    ) : (
+                      <span className="chip chip-amber">Pendiente de confirmación</span>
+                    )}
+                  </dd>
+                </div>
+              </dl>
+              {!service.schedule.verified ? (
+                <p className="detail-note" style={{ marginTop: '0.5rem' }}>
+                  <Icon name="info" size={16} />
+                  El horario no ha sido confirmado con la fuente oficial. Confirma antes de acudir.
+                </p>
+              ) : null}
+            </section>
+          ) : null}
+
+          {service.locations && service.locations.length > 0 ? (
+            <section className="detail-block" aria-labelledby="ubicaciones">
+              <h2 className="detail-block-title" id="ubicaciones">
+                <Icon name="pin" size={18} />
+                Ubicaciones físicas
+              </h2>
+              <div
+                className="card-grid"
+                style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
+              >
+                {service.locations.map((loc) => (
+                  <article key={loc.name} className="card">
+                    <h3 className="card-title">{loc.name}</h3>
+                    <p className="card-description">{loc.purpose}</p>
+                    <dl className="detail-list" style={{ marginTop: '1rem' }}>
+                      <div>
+                        <dt>Dirección</dt>
+                        <dd>{loc.address}</dd>
+                      </div>
+                      <div>
+                        <dt>Estado</dt>
+                        <dd>
+                          {loc.verified ? (
+                            <span className="chip chip-teal">Verificado</span>
+                          ) : (
+                            <span className="chip chip-amber">Por confirmar</span>
+                          )}
+                        </dd>
+                      </div>
+                    </dl>
+                  </article>
+                ))}
+              </div>
+              {!service.locations.some((loc) => loc.verified) ? (
+                <p className="detail-note" style={{ marginTop: '1rem' }}>
+                  <Icon name="info" size={16} />
+                  Las ubicaciones no han sido confirmadas con la fuente oficial. Verifica antes de acudir.
+                </p>
+              ) : null}
+            </section>
+          ) : null}
+
+          {service.homeVisitInformation ? (
+            <section className="detail-block" aria-labelledby="atencion-presencial">
+              <h2 className="detail-block-title" id="atencion-presencial">
+                <Icon name="clipboard" size={18} />
+                Información sobre atención presencial
+              </h2>
+              <p>{service.homeVisitInformation}</p>
+            </section>
+          ) : null}
+
+          {service.supportRoute && service.supportRoute.length > 0 ? (
+            <section className="detail-block" aria-labelledby="ruta-atencion">
+              <h2 className="detail-block-title" id="ruta-atencion">
+                <Icon name="compass" size={18} />
+                Ruta de atención integral
+              </h2>
+              <p className="detail-note" style={{ marginBottom: '1rem' }}>
+                <Icon name="info" size={16} />
+                Esta ruta es orientación informativa: no constituye un diagnóstico ni un protocolo clínico confirmado.
+              </p>
+              <ol className="detail-list" style={{ listStyle: 'none', counterReset: 'step' }}>
+                {service.supportRoute.map((step) => (
+                  <li
+                    key={step.step}
+                    style={{ position: 'relative', paddingLeft: '3rem', marginBottom: '1.5rem' }}
+                  >
+                    <span
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        width: '2rem',
+                        height: '2rem',
+                        borderRadius: '50%',
+                        background: 'var(--purple-600)',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 800,
+                        fontSize: '0.9rem',
+                      }}
+                    >
+                      {step.step}
+                    </span>
+                    <strong style={{ display: 'block', marginBottom: '0.25rem' }}>{step.title}</strong>
+                    <p style={{ margin: 0, color: 'var(--ink-600)' }}>{step.description}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ) : null}
 
           <Callout tone="info" title="VibraLink no es un servicio médico">
             Esta ficha es informativa: no incluye diagnóstico, evaluación ni
