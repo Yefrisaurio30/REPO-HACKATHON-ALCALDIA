@@ -34,7 +34,7 @@ npm run dev          # servidor de desarrollo (http://localhost:5173)
 npm run build        # comprobación de tipos + build de producción
 npm run preview      # sirve el build de producción
 npm run lint         # oxlint
-npm test             # pruebas de lógica con node:test (34 pruebas)
+npm test             # pruebas de lógica con node:test (35 pruebas)
 npm run validate:data # valida los JSON del proyecto (sin dependencias)
 ```
 
@@ -121,7 +121,7 @@ scripts/
 | --- | --- | --- |
 | `npm run build` | código completo | ✔ `tsc` sin errores + build de producción de Vite |
 | `npm run lint` | código completo | ✔ oxlint sin errores |
-| `npm test` | 21 servicios y 32 actividades | ✔ 34/34 pruebas (búsqueda, filtros, formato, rutas, integridad) |
+| `npm test` | 21 servicios y 32 actividades | ✔ 35/35 pruebas (búsqueda, filtros, formato, rutas, integridad, registro real) |
 | `npm run validate:data` | ambos JSON | ✔ reglas de datos ficticios y de datos reales |
 
 - **Datos usados:** sintéticos (20 servicios y 32 actividades ficticios) más un
@@ -134,6 +134,28 @@ scripts/
   alcance del reto); el formulario de reporte no envía datos a servidores; la
   verificación de fuentes es manual y el registro real todavía no tiene fecha
   de consulta; la ventana de actividades es fija (ago 2026 → dic 2027).
+
+## Evidencia de necesidad y preguntas de usuario
+
+- **Problema delimitado:** jóvenes de 18 a 28 años en Villavicencio que necesitan
+  orientación en salud mental, bienestar o apoyo, pero sin una ruta clara de
+  acceso a los servicios de orientación disponibles.
+- **Usuario principal:** el joven que hoy describe y busca su propia ayuda por
+  redes sociales, familia, amigos o buscadores; sin un punto de entrada único.
+- **Preguntas de exploración:** el equipo planteó preguntas para entender cómo
+  se busca información hoy, antes de definir cómo la solución debe facilitarla
+  (no se sustituye evaluación clínica ni se generan datos).
+
+## Plan de operación
+
+- **Quién verifica:** responsable designado de revisión de fuentes.
+- **Frecuencia:** revisión inicial documentada al cierre del desarrollo y refresco
+  periódico de fuentes para la versión operativa.
+- **Reporte y actualización:** el formulario de la página de Transparencia
+  registra el alerta → responsable re-verifica la fuente → se actualiza el
+  registro conservando la trazabilidad (fecha de última consulta).
+- **Fuentes inactivas:** un teléfono o ruta reportado queda actualizado como
+  «pendiente» en lugar de seguirse mostrando como vigente.
 
 ## Trabajo previo y licencias
 

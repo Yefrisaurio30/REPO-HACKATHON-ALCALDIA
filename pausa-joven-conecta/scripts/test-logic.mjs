@@ -318,6 +318,21 @@ test('cada registro tiene la fecha de consulta o deja constancia de que no la ti
   }
 })
 
+// ---------------------------------------------------------------- registro real
+
+test('el registro real de Yo Te Escucho declara sus datos sin afirmar vigencia', () => {
+  const real = services.find((item) => item.id === 'yo-te-escucho-villavicencio')
+  assert.ok(real, 'debe existir el registro real')
+  assert.equal(real.isDemo, false, 'el registro real no es de demostración')
+  assert.equal(real.verificationStatus, 'pendiente', 'sin fecha de consulta debe quedar pendiente')
+  assert.equal(real.lastVerified, null, 'sin fecha de consulta no hay fecha publicada')
+  assert.ok(real.notes && real.notes.trim().length > 0, 'debe declarar notas de verificación')
+  assert.ok(real.sourceUrl && real.sourceUrl.startsWith('https://'), 'debe tener fuente oficial')
+  assert.ok(real.supportRoute && real.supportRoute.length > 0, 'debe tener ruta de soporte')
+  assert.equal(real.contactStructured?.phone, '018000931089')
+  assert.equal(real.contactStructured?.whatsapp, '+573163907010')
+})
+
 test('el conjunto de datos cubre actividades pasadas y futuras', () => {
   const past = activities.filter((item) => isPastActivity(item, NOW))
   const future = activities.filter((item) => !isPastActivity(item, NOW))
