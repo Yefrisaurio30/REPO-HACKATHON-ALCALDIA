@@ -12,6 +12,11 @@ type ServiceCardProps = {
 
 /** Tarjeta de un servicio del directorio. */
 export default function ServiceCard({ service }: ServiceCardProps) {
+  const locationLabel =
+    service.city && service.department
+      ? `${service.city}, ${service.department}`
+      : (service.location ?? 'Ubicación por confirmar')
+
   return (
     <article className="card service-card" data-service-id={service.id}>
       <div className="card-topline">
@@ -44,7 +49,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           <Icon name="pin" size={16} />
           <span>
             <span className="meta-label">Lugar</span>
-            {service.location ?? 'Ubicación por confirmar'}
+            {locationLabel}
           </span>
         </li>
       </ul>
