@@ -7,7 +7,7 @@ type DemoBadgeProps = {
  * Etiqueta visible que identifica los registros ficticios de demostración.
  * Se muestra en todas las tarjetas para no confundirlas con datos verificados.
  */
-export default function DemoBadge({ label = 'Dato de demostración' }: DemoBadgeProps) {
+export default function DemoBadge({ label = 'Datos ficticios' }: DemoBadgeProps) {
   return (
     <span
       className="demo-badge"

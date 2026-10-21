@@ -7,11 +7,12 @@
     "modality": "presencial",
     "targetAudience": "Jóvenes de 14 a 17 años",
     "location": "Sede simulada del barrio Demo Norte, local 3 (ubicación ficticia)",
-    "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
-    "verificationStatus": "demo",
-    "isDemo": true
+    "contact": "Ejemplo de contacto: orientacion@demo.example (correo de ejemplo, no recibe mensajes)",
+    "sourceUrl": "https://demo.example/villavicencio/servicios/orientacion-vital",
+    "lastVerified": "2026-10-18",
+    "verificationStatus": "pendiente",
+    "isDemo": true,
+    "notes": "El contacto es un marcador de posición sin verificar: no lo trates como un canal vigente."
   },
   {
     "id": "service-demo-002",
@@ -22,10 +23,11 @@
     "targetAudience": "Jóvenes de 18 a 28 años",
     "location": null,
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/linea-telefonica",
+    "lastVerified": "2026-10-18",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": "Todavía no existe un número de contacto: la interfaz lo informa en lugar de inventarlo."
   },
   {
     "id": "service-demo-003",
@@ -35,11 +37,12 @@
     "modality": "virtual",
     "targetAudience": "Jóvenes de 17 a 22 años",
     "location": "Aula en línea de prueba (sin dirección real)",
-    "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
-    "verificationStatus": "demo",
-    "isDemo": true
+    "contact": "Ejemplo de contacto: mentoría@demo.example (correo de ejemplo, no recibe mensajes)",
+    "sourceUrl": "https://demo.example/villavicencio/servicios/mentoria-universitaria",
+    "lastVerified": "2026-10-15",
+    "verificationStatus": "pendiente",
+    "isDemo": true,
+    "notes": "Muestra de contacto sin verificar: la fecha corresponde a la revisión del registro de demostración."
   },
   {
     "id": "service-demo-004",
@@ -53,7 +56,8 @@
     "sourceUrl": null,
     "lastVerified": null,
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": "Registro sin fuente asociada: por eso no se muestra fecha de consulta ni contacto."
   },
   {
     "id": "service-demo-005",
@@ -64,10 +68,11 @@
     "targetAudience": "Jóvenes de 14 a 30 años",
     "location": "Gimnasio simulado de la Demo Oeste (ubicación ficticia)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/circulo-ejercicio",
+    "lastVerified": "2026-10-18",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-006",
@@ -78,10 +83,11 @@
     "targetAudience": "Jóvenes de 18 a 28 años",
     "location": "Plataforma en línea de prueba (sin dirección real)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/autocuidado-emocional",
+    "lastVerified": "2026-10-18",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-007",
@@ -92,10 +98,11 @@
     "targetAudience": "Jóvenes de 15 a 24 años",
     "location": "Aula en línea de prueba (sin dirección real)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/habilidades-digitales",
+    "lastVerified": "2026-10-18",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-008",
@@ -106,10 +113,11 @@
     "targetAudience": "Estudiantes de 10° a 11° grado",
     "location": "Instituto simulado del conjunto Demo Este, aula 204 (ubicación ficticia)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/logica-matematicas",
+    "lastVerified": "2026-10-15",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-009",
@@ -123,7 +131,8 @@
     "sourceUrl": null,
     "lastVerified": null,
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": "Registro sin fuente asociada: la interfaz lo muestra como dato pendiente de fuente."
   },
   {
     "id": "service-demo-010",
@@ -133,11 +142,12 @@
     "modality": "virtual",
     "targetAudience": "Jóvenes de 18 a 28 años",
     "location": "Ventanilla en línea de prueba (sin dirección real)",
-    "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
-    "verificationStatus": "demo",
-    "isDemo": true
+    "contact": "Ejemplo de contacto: semilla@demo.example (correo de ejemplo, no recibe mensajes)",
+    "sourceUrl": "https://demo.example/villavicencio/servicios/fondo-semilla",
+    "lastVerified": "2026-10-18",
+    "verificationStatus": "pendiente",
+    "isDemo": true,
+    "notes": "El trámite real de apoyos lo defines la institución responsable; este registro solo muestra el flujo."
   },
   {
     "id": "service-demo-011",
@@ -148,10 +158,11 @@
     "targetAudience": "Jóvenes de 17 a 24 años",
     "location": null,
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/convocatorias-becas",
+    "lastVerified": "2026-10-12",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-012",
@@ -162,10 +173,11 @@
     "targetAudience": "Adolescentes y jóvenes de 12 a 25 años",
     "location": "Bodega simulada del barrio Demo Oriente (ubicación ficticia)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/banco-suministros",
+    "lastVerified": "2026-10-12",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-013",
@@ -176,10 +188,11 @@
     "targetAudience": "Adolescentes y jóvenes de 13 a 26 años",
     "location": "Sede simulada de la Plaza Demo (ubicación ficticia)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/casa-de-juventud",
+    "lastVerified": "2026-10-18",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-014",
@@ -190,10 +203,11 @@
     "targetAudience": "Jóvenes de 12 a 22 años",
     "location": "Polideportivo simulado del barrio Demo Suroeste (ubicación ficticia)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/sede-deportiva",
+    "lastVerified": "2026-10-15",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-015",
@@ -204,10 +218,11 @@
     "targetAudience": "Jóvenes de 13 a 24 años",
     "location": "Servidor de prueba (sin dirección real)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/club-videojuegos",
+    "lastVerified": "2026-10-15",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-016",
@@ -218,10 +233,11 @@
     "targetAudience": "Jóvenes lectores de 12 a 19 años",
     "location": "Biblioteca simulada de la Demo Centro (ubicación ficticia)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/biblioteca-juvenil",
+    "lastVerified": "2026-10-12",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
   },
   {
     "id": "service-demo-017",
@@ -232,9 +248,55 @@
     "targetAudience": "Jóvenes de 11 a 18 años y sus familias",
     "location": "Teatro simulado del conjunto Demo Norte (ubicación ficticia)",
     "contact": null,
-    "sourceUrl": null,
-    "lastVerified": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/teatro-escolar",
+    "lastVerified": "2026-10-12",
     "verificationStatus": "demo",
-    "isDemo": true
+    "isDemo": true,
+    "notes": null
+  },
+  {
+    "id": "service-demo-018",
+    "name": "Ludoteca Parque Abierto (ficticia)",
+    "category": "actividades-juveniles",
+    "description": "Espacio de juego libre con talleres de procedencia, tablero y juegos de mesa al aire libre. Registro de demostración.",
+    "modality": "presencial",
+    "targetAudience": "Niños, adolescentes y jóvenes de 8 a 17 años",
+    "location": "Parque simulado de la Demo Norte (ubicación ficticia)",
+    "contact": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/ludoteca-parque",
+    "lastVerified": "2026-10-18",
+    "verificationStatus": "demo",
+    "isDemo": true,
+    "notes": null
+  },
+  {
+    "id": "service-demo-019",
+    "name": "Escuela de Liderazgo Juvenil (ficticia)",
+    "category": "actividades-juveniles",
+    "description": "Encuentros virtuales para entrenar comunicación, trabajo en equipo y liderazgo dentro de grupos juveniles. Programa ficticio.",
+    "modality": "virtual",
+    "targetAudience": "Jóvenes de 16 a 28 años",
+    "location": "Aula en línea de prueba (sin dirección real)",
+    "contact": null,
+    "sourceUrl": "https://demo.example/villavicencio/servicios/liderazgo-juvenil",
+    "lastVerified": "2026-10-18",
+    "verificationStatus": "demo",
+    "isDemo": true,
+    "notes": null
+  },
+  {
+    "id": "service-demo-020",
+    "name": "Asesoría de Empleabilidad Juvenil (ficticia)",
+    "category": "orientacion",
+    "description": "Orientación para preparar tu hoja de vida, practicar entrevistas y conocer oportunidades de empleo en el municipio. Registro de demostración.",
+    "modality": "presencial",
+    "targetAudience": "Jóvenes de 18 a 28 años",
+    "location": "Oficina simulada del conjunto Demo Centro (ubicación ficticia)",
+    "contact": "Ejemplo de contacto: empleabilidad@demo.example (correo de ejemplo, no recibe mensajes)",
+    "sourceUrl": "https://demo.example/villavicencio/servicios/empleabilidad",
+    "lastVerified": "2026-10-15",
+    "verificationStatus": "pendiente",
+    "isDemo": true,
+    "notes": "Registro pendiente de verificación: la fecha corresponde a la revisión del registro de demostración."
   }
 ]
