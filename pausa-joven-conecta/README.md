@@ -1,32 +1,48 @@
-# React + TypeScript + Vite
+# VibraLink · Mente Sana Joven
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Prototipo web para el reto **«Mente Sana Joven»** de la Hackathon Villavicencio 2026.
+La aplicación tiene dos módulos:
 
-Currently, two official plugins are available:
+- **Directorio de servicios** (`src/data/services.json`): búsqueda por nombre y
+  descripción, y filtros por categoría y modalidad.
+- **Agenda comunitaria** (`src/data/activities.json`): filtros por categoría, mes y
+  estado (programadas / finalizadas).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Datos de demostración
 
-## React Compiler
+Los archivos `src/data/services.json` y `src/data/activities.json` contienen
+**registros ficticios** creados para probar el prototipo. Todos llevan
+`"isDemo": true` y `"verificationStatus": "demo"`, no incluyen teléfonos, correos ni
+enlaces reales, y la interfaz los muestra con la etiqueta «Dato de demostración».
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Para reemplazar los datos de prueba por fuentes verificadas hay que mantener la
+misma forma de los registros (tipos en `src/types.ts`) y actualizar
+`verificationStatus` e `isDemo` en cada registro.
 
-## Expanding the Oxlint configuration
+## Comandos
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install          # solo la primera vez
+npm run dev          # servidor de desarrollo
+npm run build        # comprobación de tipos + build de producción
+npm run lint         # oxlint
+npm run validate:data # valida los JSON de demostración (sin dependencias)
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Estructura
+
+```
+src/
+  data/
+    services.json     # 17 servicios ficticios
+    activities.json   # 18 actividades ficticias
+    index.ts          # carga los JSON y expone filtros y utilidades
+    labels.ts         # etiquetas en español de categorías y modalidades
+  components/
+    ServiceDirectory.tsx  # buscador + filtros del directorio
+    ServiceCard.tsx       # tarjeta de servicio (identificada por su id)
+    CommunityAgenda.tsx   # agenda con filtros por categoría, mes y estado
+    ActivityCard.tsx      # tarjeta de actividad (identificada por su id)
+    DemoBadge.tsx         # etiqueta visible de dato de demostración
+  types.ts            # interfaces de los registros
+```
