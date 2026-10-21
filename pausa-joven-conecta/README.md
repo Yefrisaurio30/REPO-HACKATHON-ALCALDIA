@@ -7,10 +7,12 @@ VibraLink conecta a jóvenes de Villavicencio con servicios de orientación y co
 actividades comunitarias de bienestar, mostrando siempre **de dónde viene cada
 dato y cuándo se revisó**.
 
-> ⚠️ **Prototipo con datos ficticios.** Todos los registros son inventados para
-> probar la interfaz: no corresponden a instituciones reales, no tienen contactos
-> confirmados y los enlaces apuntan al dominio reservado `demo.example`, que
-> nunca resuelve.
+> ⚠️ **Datos mixtos, siempre etiquetados.** El directorio carga **20 servicios
+> ficticios** para probar la interfaz (contactos de ejemplo y enlaces al dominio
+> reservado `demo.example`, que nunca resuelve) y **1 registro real** —«Yo Te
+> Escucho» de Villavicencio— con estado **«Pendiente de verificación»** y
+> `lastVerified: null`: ningún teléfono se publica como vigente sin fuente
+> oficial y fecha de consulta.
 
 ## Qué incluye
 
@@ -33,7 +35,7 @@ npm run build        # comprobación de tipos + build de producción
 npm run preview      # sirve el build de producción
 npm run lint         # oxlint
 npm test             # pruebas de lógica con node:test (34 pruebas)
-npm run validate:data # valida los JSON de demostración (sin dependencias)
+npm run validate:data # valida los JSON del proyecto (sin dependencias)
 ```
 
 ## Estructura
@@ -63,7 +65,7 @@ src/
     hooks.ts          # `useRouter`, `useRouteMatch`, `useIsActive`
     index.tsx         # `RouterProvider` y `Link`
   data/
-    services.json     # 20 servicios ficticios
+    services.json     # 20 servicios ficticios + 1 real pendiente (Yo Te Escucho)
     activities.json   # 32 actividades ficticias (ago 2026 → dic 2027)
     filters.ts        # lógica pura de búsqueda, filtros y formato
     index.ts          # carga los JSON y expone los filtros
@@ -93,9 +95,12 @@ scripts/
 - **Honestidad del dato.** Si falta información, la interfaz lo dice
   («Sin fecha registrada», «Sin fuente registrada», «Todavía no hay un contacto
   confirmado») en vez de inventarla.
-- **Sin datos reales.** Los enlaces solo usan `demo.example` (dominio reservado
-  por la RFC 2606, nunca resuelve) y los contactos de ejemplo se declaran como
-  tales. El validador de datos lo verifica en cada ejecución.
+- **Reglas distintas para datos ficticios y reales.** Los registros ficticios
+  usan contactos de ejemplo y solo el dominio `demo.example` (dominio reservado
+  por la RFC 2606, nunca resuelve). Los registros reales exigen fuente oficial
+  `https://`, notas de verificación y estado `pendiente`, salvo que exista fecha
+  de consulta: `npm run validate:data` aplica un juego de reglas distinto a
+  cada tipo de registro en cada ejecución.
 
 ## Accesibilidad y seguridad
 
@@ -104,10 +109,45 @@ scripts/
 - Etiquetas visibles en todos los controles, `aria-live` en los contadores de
   resultados y errores de formulario con `role="alert"` y `aria-invalid`.
 - `prefers-reduced-motion` respetado y contraste verificado (Lighthouse
-  Accessibility 1.0 en todas las páginas).
+  Accessibility 1.0 en todas las páginas; reproducible con
+  `npx lighthouse http://localhost:4173 --only-categories=accessibility`).
 - El formulario de reporte **no envía datos a ningún servidor**, no guarda nada
   en el dispositivo y no solicita información sensible.
 - Enlace externo con `target="_blank"` y `rel="noopener noreferrer external"`.
+
+## Evidencia de pruebas y estado TRL 4
+
+| Caso de prueba | Qué usa | Resultado |
+| --- | --- | --- |
+| `npm run build` | código completo | ✔ `tsc` sin errores + build de producción de Vite |
+| `npm run lint` | código completo | ✔ oxlint sin errores |
+| `npm test` | 21 servicios y 32 actividades | ✔ 34/34 pruebas (búsqueda, filtros, formato, rutas, integridad) |
+| `npm run validate:data` | ambos JSON | ✔ reglas de datos ficticios y de datos reales |
+
+- **Datos usados:** sintéticos (20 servicios y 32 actividades ficticios) más un
+  registro real pendiente sin fecha de consulta. No se usó información de salud
+  de personas reales ni se probó con público.
+- **Funciones críticas integradas y funcionando en entorno controlado:**
+  búsqueda con filtros, ficha de detalle con contacto, estados de verificación
+  y formulario de reporte.
+- **Limitaciones conocidas:** sin pruebas con usuarios reales (TRL 5 fuera del
+  alcance del reto); el formulario de reporte no envía datos a servidores; la
+  verificación de fuentes es manual y el registro real todavía no tiene fecha
+  de consulta; la ventana de actividades es fija (ago 2026 → dic 2027).
+
+## Trabajo previo y licencias
+
+- **Trabajo previo:** todo el código (router propio, componentes, estilos,
+  scripts y datos) se escribió para este proyecto; no se copió código de otros
+  repositorios ni se usó una plantilla de UI.
+- **Dependencias de terceros** (fijadas en `package-lock.json`): react y
+  react-dom (MIT), typescript (Apache-2.0), vite y @vitejs/plugin-react (MIT),
+  oxlint (MIT) y @types/* (MIT). No hay dependencias nuevas en tiempo de
+  ejecución.
+- **Sin credenciales:** no hay llaves API, contraseñas ni datos personales en
+  el repositorio ni en la presentación.
+- **Datos:** el registro real proviene de una publicación oficial de la
+  Alcaldía de Villavicencio (ver `sourceUrl` en `src/data/services.json`).
 
 ## Alcance (fuera del alcance del prototipo)
 
@@ -115,4 +155,6 @@ VibraLink es una herramienta informativa y comunitaria. **No** hace diagnóstico
 **no** evalúa clínicamente, **no** predice riesgo, **no** prescribe tratamientos y
 **no** incluye chatbots que se hagan pasar por profesionales de la salud. Tampoco
 recolecta datos de salud mental ni permite probar con público real: las
-pruebas del prototipo usan datos sintéticos y escenarios ficticios.
+pruebas del prototipo usan datos sintéticos y escenarios ficticios. El único
+registro real se usa para mostrar cómo se publica un dato **no verificado**,
+sin afirmar su vigencia.
