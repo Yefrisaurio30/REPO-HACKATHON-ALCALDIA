@@ -126,6 +126,20 @@ export function isPastActivity(activity: Activity, now: Date = new Date()): bool
   return activityStart(activity).getTime() < now.getTime()
 }
 
+/** `true` si la fecha de la actividad (`YYYY-MM-DD`) es una fecha real válida. */
+export function isValidActivityDate(activity: Activity): boolean {
+  if (typeof activity.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(activity.date)) {
+    return false
+  }
+  const [year, month, day] = activity.date.split('-').map(Number)
+  const parsed = new Date(Date.UTC(year, month - 1, day))
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  )
+}
+
 /** Formatea una fecha YYYY-MM-DD como texto en español. */
 export function formatLongDate(date: string): string {
   const parsed = new Date(`${date}T00:00:00`)

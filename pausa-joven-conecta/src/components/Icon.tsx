@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react'
 
 export type IconName =
@@ -23,6 +24,9 @@ export type IconName =
   | 'filter'
   | 'book'
   | 'compass'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'list'
   | 'whatsapp'
   | 'warning'
 
@@ -152,6 +156,15 @@ const PATHS: Record<IconName, ReactNode> = {
     <>
       <circle cx="12" cy="12" r="9" />
       <path d="M15.5 8.5l-2 5-5 2 2-5 5-2z" />
+    </>
+  ),
+  'chevron-left': <polyline points="15 18 9 12 15 6" />,
+  'chevron-right': <polyline points="9 18 15 12 9 6" />,
+  list: (
+    <>
+      <line x1="8" y1="6" x2="21" y2="6" />
+      <line x1="8" y1="12" x2="21" y2="12" />
+      <line x1="8" y1="18" x2="21" y2="18" />
     </>
   ),
   whatsapp: (

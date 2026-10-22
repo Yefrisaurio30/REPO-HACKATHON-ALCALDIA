@@ -87,6 +87,7 @@ export {
   formatMonth,
   formatTime,
   isPastActivity,
+  isValidActivityDate,
   normalizeText,
 } from './filters'
 export type { ActivityFilters, ActivityStatusFilter, ServiceFilters } from './filters'

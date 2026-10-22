@@ -97,9 +97,10 @@ html {
 body {
   margin: 0;
   min-height: 100svh;
+  max-width: 100%;
+  overflow-x: hidden;
   background: var(--calma-bg);
   color: var(--calma-ink-soft);
-  overflow-x: hidden;
 }
 
 #root,
@@ -483,5 +484,69 @@ svg {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* -------------------------------------------------------------- responsive */
+
+/* Evita desbordes globales en elementos flex/grid. */
+.app-main {
+  padding: clamp(1.25rem, 3vw, 2.5rem) 0 clamp(3rem, 6vw, 4rem);
+}
+
+.section {
+  margin-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+/* Contenedor fluido con padding adaptativo. */
+.container,
+.navbar-inner,
+.footer-inner,
+.footer-bottom,
+.navbar-panel-nav {
+  width: min(var(--container), 100% - clamp(1rem, 4vw, 2.5rem));
+  margin-inline: auto;
+}
+
+/* Imágenes y medios proporcionales. */
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Texto largo sin desbordar. */
+h1, h2, h3, h4, p, li, dd, dt {
+  overflow-wrap: break-word;
+}
+
+/* Inputs y botones táctiles. */
+.btn,
+.calendar-nav,
+.navbar-toggle,
+.search-clear {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@media (max-width: 640px) {
+  .app-main {
+    padding: 1.25rem 0 3rem;
+  }
+  .section {
+    margin-top: 2.25rem;
+  }
+  .section-head {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover,
+  .card:hover,
+  .related-link:hover {
+    transform: none;
   }
 }
