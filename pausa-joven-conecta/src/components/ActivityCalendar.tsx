@@ -101,6 +101,7 @@ export default function ActivityCalendar({
   const { year, monthIndex } = parseCalendarMonth(month)
   const weeks = buildCalendarWeeks(year, monthIndex)
   const activeDates = datesWithActivities(activities)
+  const today = new Date()
 
   return (
     <div className="calendar">
@@ -145,18 +146,24 @@ export default function ActivityCalendar({
                 const key = toCalendarKey(date);
                 const isActive = activeDates.has(key);
                 const isSelected = selectedDate === key;
+                const isToday =
+                  date.getFullYear() === today.getFullYear() &&
+                  date.getMonth() === today.getMonth() &&
+                  date.getDate() === today.getDate();
                 const dayLabel = formatCalendarDay(date);
                 const dayAriaLabel = isSelected
                   ? `Día seleccionado: ${dayLabel}`
                   : isActive
                     ? `Día ${dayLabel} con actividades`
-                    : `Día ${dayLabel}`;
+                    : isToday
+                      ? `Día de hoy: ${dayLabel}`
+                      : `Día ${dayLabel}`;
 
                 return (
                   <td key={cellIndex} className="calendar-cell">
                     <button
                       type="button"
-                      className={`calendar-day${isActive ? ' is-active' : ''}${isSelected ? ' is-selected' : ''}`}
+                      className={`calendar-day${isActive ? ' is-active' : ''}${isSelected ? ' is-selected' : ''}${isToday ? ' is-today' : ''}`}
                       onClick={() => onSelectDate(key)}
                       aria-pressed={isSelected}
                       aria-label={dayAriaLabel}

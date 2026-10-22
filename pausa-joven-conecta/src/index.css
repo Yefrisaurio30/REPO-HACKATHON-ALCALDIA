@@ -83,6 +83,8 @@ html {
 body {
   margin: 0;
   min-height: 100svh;
+  max-width: 100%;
+  overflow-x: hidden;
   background:
     radial-gradient(1100px 460px at 8% -12%, var(--purple-100), transparent 68%),
     radial-gradient(900px 420px at 102% -4%, var(--teal-100), transparent 70%),
@@ -466,5 +468,17 @@ svg {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 640px) {
+  .app-main {
+    padding: 1.25rem 0 3rem;
+  }
+
+  .section {
+    margin-top: 2.25rem;
   }
 }
