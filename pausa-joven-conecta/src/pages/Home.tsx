@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties, type FormEvent } from 'react'
 import ActivityCard from '../components/ActivityCard'
 import Callout from '../components/Callout'
 import Icon from '../components/Icon'
@@ -15,6 +15,21 @@ const ROTATING_MESSAGES = [
   'Un espacio cerca puede cambiar la semana.',
 ]
 
+const MOODS = [
+  { color: '#ffb703', mouth: 'M15 28c3 6 15 6 18 0' },
+  { color: '#2ec4b6', mouth: 'M16 30h16' },
+  { color: '#4cc9f0', mouth: 'M16 33c3-5 13-5 16 0' },
+  { color: '#ff6b6b', mouth: 'M16 29c2 3 5 3 7 0s5-3 7 0' },
+  { color: '#0fa39a', mouth: 'M18 30c2 2 10 2 12 0' },
+]
+
+const COLOR_CARDS = [
+  { color: '#0fa39a', icon: 'heart' as const },
+  { color: '#ffb703', icon: 'calendar' as const },
+  { color: '#ff6b6b', icon: 'users' as const },
+  { color: '#4cc9f0', icon: 'sparkles' as const },
+]
+
 type SearchTarget = 'servicios' | 'actividades'
 
 /** Página de inicio: presentación, buscador general y accesos principales. */
@@ -22,6 +37,7 @@ export default function Home() {
   const [query, setQuery] = useState('')
   const [target, setTarget] = useState<SearchTarget>('servicios')
   const [messageIndex, setMessageIndex] = useState(0)
+  const [selectedMood, setSelectedMood] = useState(0)
   const { navigate } = useRouter()
   const now = useNow()
 
@@ -49,13 +65,13 @@ export default function Home() {
 
   return (
     <>
-      <section className="hero">
+      <section className="hero" aria-labelledby="hero-titulo">
         <div className="hero-copy">
           <p className="eyebrow">
             <Icon name="sparkles" size={14} />
             Bienestar joven en Villavicencio
           </p>
-          <h1 className="hero-title">
+          <h1 className="hero-title" id="hero-titulo">
             Conecta con <span className="hero-title-accent">lo que te hace bien.</span>
           </h1>
           <p className="hero-lead">
@@ -72,59 +88,133 @@ export default function Home() {
               Ver actividades
             </Link>
           </div>
+
+          <aside className="hero-panel" aria-label="Punto de partida">
+            <div className="hero-panel-head">
+              <h2 className="hero-panel-title">Tu punto de partida</h2>
+              <span className="hero-panel-note">
+                <span className="dot dot-teal" aria-hidden="true" />
+                Información clara
+              </span>
+            </div>
+
+            <div className="hero-panel-cards">
+              <Link className="mini-card mini-card-purple" to="/servicios">
+                <span className="mini-card-icon" aria-hidden="true">
+                  <Icon name="heart" size={20} />
+                </span>
+                <span>
+                  <strong>Apoyo</strong>
+                  <small>Rutas informativas</small>
+                </span>
+              </Link>
+              <Link className="mini-card mini-card-teal" to="/actividades">
+                <span className="mini-card-icon" aria-hidden="true">
+                  <Icon name="calendar" size={20} />
+                </span>
+                <span>
+                  <strong>Actividades</strong>
+                  <small>Planes para conectar</small>
+                </span>
+              </Link>
+            </div>
+
+            <div className="hero-quote">
+              <span className="hero-quote-icon" aria-hidden="true">
+                <Icon name="sparkles" size={20} />
+              </span>
+              <span>
+                <small>Vibra del día</small>
+                <strong>{ROTATING_MESSAGES[messageIndex]}</strong>
+              </span>
+            </div>
+
+            <ul className="hero-panel-pills">
+              <li>
+                <Icon name="shield" size={15} />
+                Fuentes visibles
+              </li>
+              <li>
+                <Icon name="check" size={15} />
+                Datos fechados
+              </li>
+            </ul>
+          </aside>
         </div>
 
-        <aside className="hero-panel" aria-label="Punto de partida">
-          <div className="hero-panel-head">
-            <h2 className="hero-panel-title">Tu punto de partida</h2>
-            <span className="hero-panel-note">
-              <span className="dot dot-teal" aria-hidden="true" />
-              Información clara
-            </span>
-          </div>
-
-          <div className="hero-panel-cards">
-            <Link className="mini-card mini-card-purple" to="/servicios">
-              <span className="mini-card-icon" aria-hidden="true">
-                <Icon name="heart" size={20} />
-              </span>
-              <span>
-                <strong>Apoyo</strong>
-                <small>Rutas informativas</small>
-              </span>
-            </Link>
-            <Link className="mini-card mini-card-teal" to="/actividades">
-              <span className="mini-card-icon" aria-hidden="true">
-                <Icon name="calendar" size={20} />
-              </span>
-              <span>
-                <strong>Actividades</strong>
-                <small>Planes para conectar</small>
-              </span>
-            </Link>
-          </div>
-
-          <div className="hero-quote">
-            <span className="hero-quote-icon" aria-hidden="true">
-              <Icon name="sparkles" size={20} />
-            </span>
-            <span>
-              <small>Vibra del día</small>
-              <strong>{ROTATING_MESSAGES[messageIndex]}</strong>
-            </span>
-          </div>
-
-          <ul className="hero-panel-pills">
-            <li>
-              <Icon name="shield" size={15} />
-              Fuentes visibles
-            </li>
-            <li>
-              <Icon name="check" size={15} />
-              Datos fechados
-            </li>
-          </ul>
-        </aside>
+        <div className="hero-art">
+          <svg
+            className="hero-illustration"
+            id="ilustracion-portada"
+            viewBox="0 0 520 460"
+            role="img"
+            aria-labelledby="ilustracion-portada-titulo"
+            focusable="false"
+          >
+            <title id="ilustracion-portada-titulo">
+              Ilustración de una persona meditando entre colinas, con sol y estrellas
+            </title>
+            <defs>
+              <linearGradient id="calma-cielo" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#c8f5ee" />
+                <stop offset="1" stopColor="#eefcf9" />
+              </linearGradient>
+              <linearGradient id="calma-colina" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#2ec4b6" />
+                <stop offset="1" stopColor="#0fa39a" />
+              </linearGradient>
+              <clipPath id="calma-marco">
+                <rect x="10" y="10" width="500" height="440" rx="48" />
+              </clipPath>
+            </defs>
+            <rect x="10" y="10" width="500" height="440" rx="48" fill="url(#calma-cielo)" />
+            <g clipPath="url(#calma-marco)">
+              <circle cx="366" cy="128" r="64" fill="#ffb703" />
+              <circle cx="366" cy="128" r="88" fill="#ffb703" opacity="0.16" />
+              <path
+                d="M10 356C120 270 210 270 300 356c60-58 130-58 210 0v104H10Z"
+                fill="url(#calma-colina)"
+                opacity="0.85"
+              />
+              <path
+                d="M10 392c110-58 200-58 290 0 70-40 140-40 210 0v58H10Z"
+                fill="#0b7f78"
+                opacity="0.5"
+              />
+              <g>
+                <circle cx="260" cy="262" r="25" fill="#1f2a2e" />
+                <path d="M260 289c-20 0-32 20-32 45h64c0-25-12-45-32-45Z" fill="#3d5a66" />
+                <path d="M228 334c-14 0-24 10-24 18h112c0-8-10-18-24-18Z" fill="#1f2a2e" />
+                <path
+                  d="M244 300c5 6 27 6 32 0"
+                  stroke="#c8f5ee"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeLinecap="round"
+                  opacity="0.6"
+                />
+              </g>
+              <path
+                d="M112 146c3.5 12 6.5 15 18.5 18.5-12 3.5-15 6.5-18.5 18.5-3.5-12-6.5-15-18.5-18.5 12-3.5 15-6.5 18.5-18.5Z"
+                fill="#ff6b6b"
+              />
+              <path
+                d="M424 246c2.5 9 4.5 11 13.5 13.5-9 2.5-11 4.5-13.5 13.5-2.5-9-4.5-11-13.5-13.5 9-2.5 11-4.5 13.5-13.5Z"
+                fill="#4cc9f0"
+              />
+              <path
+                d="M156 232c2.5 9 4.5 11 13.5 13.5-9 2.5-11 4.5-13.5 13.5-2.5-9-4.5-11-13.5-13.5 9-2.5 11-4.5 13.5-13.5Z"
+                fill="#0077b6"
+              />
+              <path d="M118 372c0-30 24-46 50-46 0 30-22 48-50 46Z" fill="#ffb703" />
+              <path
+                d="M408 384c0-26 21-40 44-40 0 26-19 42-44 40Z"
+                fill="#ff6b6b"
+                opacity="0.9"
+              />
+            </g>
+          </svg>
+        </div>
       </section>
 
       <section className="search-band" aria-labelledby="titulo-busqueda">
@@ -204,6 +294,89 @@ export default function Home() {
             <Icon className="feature-card-arrow" name="arrow-right" size={22} />
           </Link>
         </div>
+      </section>
+
+      <div className="wave-divider" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" focusable="false">
+          <path
+            d="M0 72C200 20 380 20 560 62s360 58 560 8 260-26 320-8V120H0Z"
+            fill="#c8f5ee"
+          />
+          <path
+            d="M0 92C200 52 380 52 560 84s360 40 560 6 260-14 320-2V120H0Z"
+            fill="#ffb703"
+            opacity="0.35"
+          />
+        </svg>
+      </div>
+
+      <section className="mood-section" aria-label="Selecciona cómo te sientes">
+        <div className="mood-faces" role="group" aria-label="Estados de ánimo">
+          {MOODS.map((mood, index) => (
+            <button
+              key={mood.color}
+              type="button"
+              className={`mood-face${selectedMood === index ? ' is-selected' : ''}`}
+              style={{ '--mood-color': mood.color } as CSSProperties}
+              aria-pressed={selectedMood === index}
+              aria-label={ROTATING_MESSAGES[index % ROTATING_MESSAGES.length]}
+              onClick={() => {
+                setSelectedMood(index)
+                setMessageIndex(index % ROTATING_MESSAGES.length)
+              }}
+            >
+              <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="20.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.6"
+                />
+                <circle cx="17" cy="20" r="2.5" fill="currentColor" />
+                <circle cx="31" cy="20" r="2.5" fill="currentColor" />
+                <path
+                  d={mood.mouth}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          ))}
+        </div>
+        <p className="mood-message" aria-live="polite">
+          {ROTATING_MESSAGES[messageIndex]}
+        </p>
+      </section>
+
+      <section className="breathing-band" aria-hidden="true">
+        <span className="breathing-halo" />
+        <span className="breathing-circle" />
+      </section>
+
+      <section className="status-band" aria-hidden="true">
+        <div className="status-track">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <span
+              key={index}
+              className={`status-segment${index < 4 ? ' is-filled' : ''}`}
+            />
+          ))}
+        </div>
+        <span className="status-rocket">
+          <Icon name="rocket" size={26} />
+        </span>
+      </section>
+
+      <section className="color-cards" aria-hidden="true">
+        {COLOR_CARDS.map((card) => (
+          <div key={card.color} className="color-card" style={{ background: card.color }}>
+            <Icon name={card.icon} size={34} />
+          </div>
+        ))}
       </section>
 
       <section className="section" aria-labelledby="titulo-agenda">

@@ -11,6 +11,19 @@ export default function Footer() {
           <span className="footer-eyebrow">Transparencia ante todo</span>
           <p className="footer-title">VibraLink</p>
           <p className="footer-tagline">Conecta con lo que te hace bien.</p>
+          <svg
+            className="footer-art"
+            viewBox="0 0 240 96"
+            role="img"
+            aria-label="Ilustración de colinas y sol"
+            focusable="false"
+          >
+            <circle cx="186" cy="30" r="18" fill="#ffb703" />
+            <circle cx="186" cy="30" r="27" fill="#ffb703" opacity="0.18" />
+            <path d="M0 96C32 52 64 52 96 96Z" fill="#0fa39a" />
+            <path d="M70 96C112 38 152 38 194 96Z" fill="#2ec4b6" />
+            <path d="M158 96C188 62 216 62 240 96Z" fill="#0077b6" />
+          </svg>
           <p className="footer-text">
             Prototipo del reto «Mente Sana Joven» de la Hackathon Villavicencio 2026.
             VibraLink es una herramienta informativa y comunitaria: no es un

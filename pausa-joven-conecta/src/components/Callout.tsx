@@ -12,7 +12,7 @@ type CalloutProps = {
 
 const TONE_ICON: Record<CalloutTone, IconName> = {
   info: 'info',
-  warning: 'shield',
+  warning: 'warning',
   demo: 'flag',
   success: 'check',
 }

@@ -4,6 +4,6 @@
       <circle cx="19" cy="24" r="12" />
     </clipPath>
   </defs>
-  <circle cx="19" cy="24" r="12" fill="#6d3ce0" />
-  <circle cx="29" cy="24" r="12" fill="#10a89c" clip-path="url(#vibralink-left)" />
+  <circle cx="19" cy="24" r="12" fill="#0fa39a" />
+  <circle cx="29" cy="24" r="12" fill="#ffb703" clip-path="url(#vibralink-left)" />
 </svg>

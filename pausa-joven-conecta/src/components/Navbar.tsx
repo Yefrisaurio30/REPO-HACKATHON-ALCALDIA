@@ -7,10 +7,22 @@ import Icon from './Icon'
 function Wordmark() {
   return (
     <span className="wordmark">
-      <span className="wordmark-mark" aria-hidden="true">
-        <span className="wordmark-dot wordmark-dot-primary" />
-        <span className="wordmark-dot wordmark-dot-secondary" />
-      </span>
+      <svg
+        className="wordmark-logo"
+        viewBox="0 0 32 32"
+        role="img"
+        aria-label="VibraLink"
+        focusable="false"
+      >
+        <rect width="32" height="32" rx="10" fill="#0fa39a" />
+        <path
+          d="M7 21c3.5-7.5 6.5-7.5 10 0s6.5 7.5 10 0"
+          fill="none"
+          stroke="#fff6e9"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
+      </svg>
       <span className="wordmark-text">
         Vibra<span className="wordmark-accent">Link</span>
       </span>
