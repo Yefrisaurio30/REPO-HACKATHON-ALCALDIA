@@ -166,7 +166,7 @@
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 1.15rem;
 }
 
@@ -482,7 +482,7 @@
 
 .filter-bar-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
   gap: 0.9rem;
 }
 
@@ -530,17 +530,21 @@
 
 .calendar-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
 .calendar-weekday {
   padding: 0.35rem 0;
   text-align: center;
-  font-size: 0.72rem;
+  font-size: clamp(0.62rem, 1.8vw, 0.72rem);
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .calendar-cell,
@@ -555,7 +559,7 @@
 .calendar-day {
   position: relative;
   width: 100%;
-  min-height: 42px;
+  min-height: clamp(36px, 9vw, 46px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -563,7 +567,7 @@
   border-radius: var(--radius-sm);
   background: var(--bg);
   color: var(--ink-800);
-  font-size: 0.88rem;
+  font-size: clamp(0.8rem, 2.2vw, 0.92rem);
   font-weight: 700;
   cursor: pointer;
   transition:
@@ -589,13 +593,25 @@
   color: #fff;
 }
 
+.calendar-day.is-today {
+  border-color: var(--teal-500);
+  box-shadow: inset 0 0 0 1px var(--teal-500);
+}
+
+.calendar-cell,
+.calendar-cell-empty {
+  padding: 2px;
+  min-width: 0;
+}
+
 .calendar-indicator {
   position: absolute;
-  bottom: 5px;
-  width: 6px;
-  height: 6px;
+  bottom: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--teal-500);
+  box-shadow: 0 0 0 1px var(--surface);
 }
 
 .calendar-day.is-selected .calendar-indicator {
@@ -1269,6 +1285,71 @@
   .footer-inner {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+/* ---- responsive adicional ---- */
+@media (max-width: 767px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+  .detail-block,
+  .detail-block-sticky {
+    padding: 1.1rem 1rem;
+  }
+  .report-form {
+    padding: 1.1rem 1rem;
+  }
+  .calendar {
+    padding: 1rem;
+  }
+  .calendar-title {
+    font-size: 1rem;
+  }
+  .filters-panel {
+    padding: 1rem;
+  }
+  .view-switch {
+    width: 100%;
+    justify-content: center;
+  }
+  .view-switch-option {
+    flex: 1 1 auto;
+  }
+  .related-link {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .card {
+    padding: 1.1rem 1rem 1rem;
+  }
+  .calendar-nav {
+    padding: 0.4rem 0.55rem;
+  }
+  .btn-cta span {
+    display: none;
+  }
+  .btn-cta {
+    padding: 0.6rem 0.75rem;
+  }
+}
+
+/* Flex children no desbordan. */
+.navbar-inner,
+.card,
+.card-foot,
+.detail-actions,
+.filter-bar-head {
+  min-width: 0;
+}
+
+.card-meta li,
+.detail-list dd,
+.detail-contact-value,
+.card-contact-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 860px) {
