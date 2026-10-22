@@ -248,9 +248,13 @@ test('los identificadores de los registros son únicos', () => {
 })
 
 test('los servicios reales están pendientes y las actividades demo son ficticias', () => {
-  for (const service of services) {
+  for (const service of services.filter((item) => !item.isDemo)) {
     assert.equal(service.isDemo, false, `${service.id} debe ser un servicio real`)
     assert.equal(service.verificationStatus, 'pendiente', `${service.id} debe estar pendiente de verificación`)
+  }
+  for (const service of services.filter((item) => item.isDemo)) {
+    assert.equal(service.isDemo, true, `${service.id} debe ser ficticio`)
+    assert.equal(service.verificationStatus, 'demo', `${service.id} debe ser demo`)
   }
   for (const activity of activities) {
     assert.equal(activity.isDemo, true, `${activity.id} debe ser isDemo`)
@@ -276,16 +280,23 @@ test('los enlaces de demostración solo usan el dominio reservado demo.example',
     assert.ok(!url.includes('demo.example'), `Fuente real apunta al dominio de demo: ${url}`)
   }
 
-  for (const service of services) {
+  for (const service of services.filter((item) => !item.isDemo)) {
     assert.ok(service.sourceUrl?.startsWith('https://'), `Fuente oficial esperada: ${service.sourceUrl}`)
     assert.ok(!service.sourceUrl?.startsWith('https://demo.example/'), `Fuente demo no permitida: ${service.sourceUrl}`)
+  }
+  for (const service of services.filter((item) => item.isDemo)) {
+    assert.equal(service.sourceUrl, null, `Servicio ficticio sin fuente oficial: ${service.id}`)
   }
 })
 
 test('los servicios del directorio son los cuatro canales institucionales esperados', () => {
   const ids = services.map((item) => item.id)
   assert.deepEqual(ids.sort(), [
+    'brujula-joven',
+    'conecta-y-participa',
+    'espacio-entre-amigos',
     'icbf-linea-141',
+    'impulso-creativo',
     'secretaria-salud-villavicencio',
     'servicios-amigables-salud-villavicencio',
     'yo-te-escucho-villavicencio',
