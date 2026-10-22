@@ -1,80 +1,9 @@
 [
   {
-    "id": "yo-te-escucho-villavicencio",
-    "name": "Yo Te Escucho - Villavicencio",
-    "category": "orientacion",
-    "description": "Canal de orientacion y acompañamiento emocional para habitantes de Villavicencio, atendido por la Alcaldia. Ofrece escucha activa y orientacion hacia la atencion en salud mental.",
-    "modality": "telefonica",
-    "targetAudience": "Jóvenes y habitantes de Villavicencio",
-    "location": "Villavicencio",
-    "contact": "+57 316 390 7010 (WhatsApp) - 018000 931 089 (linea gratuita)",
-    "sourceUrl": "https://villavicencio.gov.co/linea-emocional-yo-te-escucho-atendio-441-casos-en-salud-mental-durante-el-ultimo-trimestre/",
-    "lastVerified": null,
-    "verificationStatus": "pendiente",
-    "isDemo": false,
-    "contactStructured": {
-      "phone": "018000931089",
-      "whatsapp": "+573163907010"
-    },
-    "supportRoute": [
-      {
-        "step": 1,
-        "title": "Contacto e intervencion inicial",
-        "description": "Contactar el canal telefonico o WhatsApp para solicitar orientacion."
-      }
-    ],
-    "notes": "Los contactos y el horario del servicio estan pendientes de verificacion con la fuente oficial."
-  },
-  {
-    "id": "icbf-linea-141",
-    "name": "ICBF - Linea 141",
-    "category": "apoyo-social",
-    "description": "Canal de protección y orientación para niñas, niños y adolescentes en situación de vulnerabilidad, ofrecido por el ICBF. La línea 141 brinda orientación y protección.",
-    "modality": "telefonica",
-    "targetAudience": "Niñas, niños y adolescentes",
-    "location": null,
-    "contact": "141",
-    "sourceUrl": "https://www.icbf.gov.co/linea-141",
-    "lastVerified": null,
-    "verificationStatus": "pendiente",
-    "isDemo": false,
-    "notes": "La información vigente de la línea 141 está pendiente de revisión."
-  },
-  {
-    "id": "secretaria-salud-villavicencio",
-    "name": "Secretaria de Salud - Villavicencio",
-    "category": "bienestar-comunitario",
-    "description": "Información sobre programas municipales de salud y bienestar para la ciudad de Villavicencio. La secretaria publica campañas de salud mental, prevención y cuidado comunitario.",
-    "modality": "presencial",
-    "targetAudience": "Jóvenes y familias de Villavicencio",
-    "location": "Villavicencio",
-    "contact": null,
-    "sourceUrl": "https://villavicencio.gov.co/",
-    "lastVerified": null,
-    "verificationStatus": "pendiente",
-    "isDemo": false,
-    "notes": "Se requiere confirmar los canales específicos de atención con la fuente oficial."
-  },
-  {
-    "id": "servicios-amigables-salud-villavicencio",
-    "name": "Servicios Amigables en Salud - Villavicencio",
-    "category": "bienestar-comunitario",
-    "description": "Información y orientación para jóvenes sobre bienestar y salud integral, con atención en el Centro de Salud Popular. Brinda orientación para el cuidado emocional y la salud.",
-    "modality": "presencial",
-    "targetAudience": "Jóvenes de Villavicencio",
-    "location": "Centro de Salud Popular, Villavicencio",
-    "contact": null,
-    "sourceUrl": "https://villavicencio.gov.co/la-alcaldia-fortalece-el-cuidado-de-la-salud-mental-de-los-jovenes-villavicenses/",
-    "lastVerified": null,
-    "verificationStatus": "pendiente",
-    "isDemo": false,
-    "notes": "La ubicación debe mostrarse como pendiente de confirmación hasta comprobar que el programa continúa funcionando."
-  },
-  {
     "id": "brujula-joven",
     "name": "Brújula Joven",
     "category": "orientacion",
-    "description": "Recurso ficticio para explorar opciones educativas, metas personales y actividades de desarrollo juvenil.",
+    "description": "Recurso ficticio para explorar metas personales, opciones educativas y actividades de desarrollo juvenil.",
     "modality": "virtual",
     "targetAudience": "Jóvenes",
     "location": null,
@@ -88,8 +17,8 @@
   {
     "id": "espacio-entre-amigos",
     "name": "Espacio Entre Amigos",
-    "category": "bienestar-comunitario",
-    "description": "Recurso ficticio que representa actividades grupales para fortalecer la convivencia, la comunicación y el sentido de comunidad.",
+    "category": "apoyo-social",
+    "description": "Recurso ficticio que representa actividades grupales para practicar la comunicación, la convivencia y la participación comunitaria.",
     "modality": "presencial",
     "targetAudience": "Jóvenes y comunidad",
     "location": null,
@@ -104,7 +33,7 @@
     "id": "impulso-creativo",
     "name": "Impulso Creativo",
     "category": "cultura",
-    "description": "Recurso ficticio para descubrir talleres de arte, escritura, música y actividades creativas.",
+    "description": "Recurso ficticio para explorar talleres de escritura, música, dibujo y expresión artística.",
     "modality": "presencial",
     "targetAudience": "Jóvenes",
     "location": null,
@@ -118,8 +47,8 @@
   {
     "id": "conecta-y-participa",
     "name": "Conecta y Participa",
-    "category": "actividades-juveniles",
-    "description": "Recurso ficticio para explorar iniciativas comunitarias, voluntariado simulado y actividades juveniles.",
+    "category": "bienestar-comunitario",
+    "description": "Recurso ficticio para descubrir actividades comunitarias simuladas y oportunidades de participación juvenil.",
     "modality": "virtual",
     "targetAudience": "Jóvenes",
     "location": null,
