@@ -25,7 +25,6 @@ export type IconName =
   | 'compass'
   | 'whatsapp'
   | 'warning'
-  | 'rocket'
 
 const PATHS: Record<IconName, ReactNode> = {
   search: (
@@ -166,13 +165,6 @@ const PATHS: Record<IconName, ReactNode> = {
       <path d="M12 3.4 21.2 20H2.8L12 3.4z" />
       <line x1="12" y1="9.5" x2="12" y2="14.5" />
       <line x1="12" y1="17.4" x2="12" y2="17.4" />
-    </>
-  ),
-  rocket: (
-    <>
-      <path d="M12 3c3.6 1.7 5.6 4.7 5.6 8.5 0 2.3-1 4.5-2.7 6.1L12 20l-2.9-2.4a8.9 8.9 0 0 1-2.7-6.1C6.4 7.7 8.4 4.7 12 3z" />
-      <circle cx="12" cy="10" r="1.9" />
-      <path d="M8.2 16.6 5.5 19.3M15.8 16.6l2.7 2.7" />
     </>
   ),
 }

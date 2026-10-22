@@ -23,13 +23,6 @@ const MOODS = [
   { color: '#0fa39a', mouth: 'M18 30c2 2 10 2 12 0' },
 ]
 
-const COLOR_CARDS = [
-  { color: '#0fa39a', icon: 'heart' as const },
-  { color: '#ffb703', icon: 'calendar' as const },
-  { color: '#ff6b6b', icon: 'users' as const },
-  { color: '#4cc9f0', icon: 'sparkles' as const },
-]
-
 type SearchTarget = 'servicios' | 'actividades'
 
 /** Página de inicio: presentación, buscador general y accesos principales. */
@@ -350,33 +343,6 @@ export default function Home() {
         <p className="mood-message" aria-live="polite">
           {ROTATING_MESSAGES[messageIndex]}
         </p>
-      </section>
-
-      <section className="breathing-band" aria-hidden="true">
-        <span className="breathing-halo" />
-        <span className="breathing-circle" />
-      </section>
-
-      <section className="status-band" aria-hidden="true">
-        <div className="status-track">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <span
-              key={index}
-              className={`status-segment${index < 4 ? ' is-filled' : ''}`}
-            />
-          ))}
-        </div>
-        <span className="status-rocket">
-          <Icon name="rocket" size={26} />
-        </span>
-      </section>
-
-      <section className="color-cards" aria-hidden="true">
-        {COLOR_CARDS.map((card) => (
-          <div key={card.color} className="color-card" style={{ background: card.color }}>
-            <Icon name={card.icon} size={34} />
-          </div>
-        ))}
       </section>
 
       <section className="section" aria-labelledby="titulo-agenda">
