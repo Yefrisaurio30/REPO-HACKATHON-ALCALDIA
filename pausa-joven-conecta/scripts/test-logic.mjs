@@ -48,32 +48,34 @@ test('normalizeText quita tildes y unifica mayúsculas', () => {
 })
 
 test('la búsqueda de servicios encuentra coincidencias por nombre', () => {
-  const results = filterServices(services, { query: 'biblioteca' })
+  const results = filterServices(services, { query: 'salud' })
   assert.ok(results.length > 0, 'debe encontrar al menos un servicio')
-  assert.ok(results.every((item) => /biblioteca/i.test(item.name)))
+  assert.ok(results.some((item) => /salud/i.test(item.name)))
 })
 
 test('la búsqueda de servicios encuentra coincidencias por descripción', () => {
-  const results = filterServices(services, { query: 'tutores' })
+  const results = filterServices(services, { query: 'acompañamiento' })
   assert.ok(results.length > 0, 'debe encontrar al menos un servicio por la descripción')
 })
 
 test('la búsqueda ignora tildes y mayúsculas', () => {
-  const conTilde = filterServices(services, { query: 'atención' }).map((item) => item.id)
-  const sinTilde = filterServices(services, { query: 'atencion' }).map((item) => item.id)
+  const conTilde = filterServices(services, { query: 'acompañamiento' }).map((item) => item.id)
+  const sinTilde = filterServices(services, { query: 'acompanamiento' }).map((item) => item.id)
   assert.deepEqual(conTilde, sinTilde)
 })
 
 test('la búsqueda acepta el comienzo de una palabra', () => {
-  const results = filterServices(services, { query: 'deporte' })
-  assert.ok(results.length > 0, 'debe encontrar la sede deportiva por el comienzo de palabra')
-  assert.ok(results.some((item) => /deportiva/i.test(item.name)))
+  const results = filterServices(services, { query: 'salud' })
+  assert.ok(results.length > 0, 'debe encontrar los servicios de salud por el comienzo de palabra')
+  assert.ok(results.some((item) => /salud/i.test(item.name)))
 })
 
 test('la búsqueda con varias palabras exige que todas coincidan', () => {
-  const resultados = filterServices(services, { query: 'deporte joven' })
+  const resultados = filterServices(services, { query: 'salud bienestar' })
   assert.ok(resultados.length > 0)
-  assert.ok(resultados.every((item) => /deport/i.test(item.name + item.description + item.targetAudience)))
+  assert.ok(
+    resultados.every((item) => /salud/i.test(item.name + item.description + item.targetAudience)),
+  )
 })
 
 test('una búsqueda sin coincidencias devuelve una lista vacía', () => {
@@ -92,9 +94,9 @@ test('el filtro por categoría reduce los resultados y mantiene la categoría', 
 })
 
 test('el filtro por modalidad reduce los resultados y mantiene la modalidad', () => {
-  const results = filterServices(services, { modality: 'virtual' })
+  const results = filterServices(services, { modality: 'presencial' })
   assert.ok(results.length > 0)
-  assert.ok(results.every((item) => item.modality === 'virtual'))
+  assert.ok(results.every((item) => item.modality === 'presencial'))
 })
 
 test('los filtros de categoría y modalidad se combinan', () => {
@@ -245,10 +247,10 @@ test('los identificadores de los registros son únicos', () => {
   assert.equal(new Set(activityIds).size, activityIds.length)
 })
 
-test('todos los registros están marcados como ficticios', () => {
+test('los servicios reales están pendientes y las actividades demo son ficticias', () => {
   for (const service of services) {
-    assert.equal(service.isDemo, true, `${service.id} debe ser isDemo`)
-    assert.notEqual(service.verificationStatus, 'verificado')
+    assert.equal(service.isDemo, false, `${service.id} debe ser un servicio real`)
+    assert.equal(service.verificationStatus, 'pendiente', `${service.id} debe estar pendiente de verificación`)
   }
   for (const activity of activities) {
     assert.equal(activity.isDemo, true, `${activity.id} debe ser isDemo`)
@@ -258,7 +260,6 @@ test('todos los registros están marcados como ficticios', () => {
 
 test('los enlaces de demostración solo usan el dominio reservado demo.example', () => {
   const urls = [
-    ...services.map((item) => item.sourceUrl),
     ...activities.map((item) => item.sourceUrl),
     ...activities.map((item) => item.registrationUrl),
   ].filter(Boolean)
@@ -267,15 +268,21 @@ test('los enlaces de demostración solo usan el dominio reservado demo.example',
   for (const url of urls) {
     assert.ok(url.startsWith('https://demo.example/'), `URL no permitida: ${url}`)
   }
+
+  for (const service of services) {
+    assert.ok(service.sourceUrl?.startsWith('https://'), `Fuente oficial esperada: ${service.sourceUrl}`)
+    assert.ok(!service.sourceUrl?.startsWith('https://demo.example/'), `Fuente demo no permitida: ${service.sourceUrl}`)
+  }
 })
 
-test('ningún registro contiene un teléfono ni un contacto real', () => {
-  for (const service of services) {
-    if (service.contact) {
-      assert.match(service.contact.toLowerCase(), /ejemplo/)
-      assert.ok(!/\d{3}[\s-]?\d{3}[\s-]?\d{4}/.test(service.contact))
-    }
-  }
+test('los servicios del directorio son los cuatro canales institucionales esperados', () => {
+  const ids = services.map((item) => item.id)
+  assert.deepEqual(ids.sort(), [
+    'icbf-linea-141',
+    'secretaria-salud-villavicencio',
+    'servicios-amigables-salud-villavicencio',
+    'yo-te-escucho-villavicencio',
+  ].sort())
 })
 
 test('cada registro tiene la fecha de consulta o deja constancia de que no la tiene', () => {

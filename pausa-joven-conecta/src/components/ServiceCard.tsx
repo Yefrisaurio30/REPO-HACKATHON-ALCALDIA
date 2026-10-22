@@ -10,8 +10,20 @@ type ServiceCardProps = {
   service: Service
 }
 
+/** Extrae el primer número de teléfono de un texto de contacto. */
+function extractPhoneNumber(value: string): string {
+  const match = value.match(/(\+?\d[\d\s]{1,}\d)/)
+  if (!match) return ''
+  return match[1].replace(/[\s-]/g, '')
+}
+
 /** Tarjeta de un servicio del directorio. */
 export default function ServiceCard({ service }: ServiceCardProps) {
+  const contact = service.contact
+  const phoneNumber = contact ? extractPhoneNumber(contact) : ''
+  const whatsappNumber = contact ? extractPhoneNumber(contact).replace(/^57/, '') : ''
+  const hasWhatsapp = contact ? /whatsapp/i.test(contact) : false
+
   return (
     <article className="card service-card" data-service-id={service.id}>
       <div className="card-topline">
@@ -48,6 +60,47 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </span>
         </li>
       </ul>
+
+      {service.contact ? (
+        <div className="card-contact">
+          <span className="card-contact-value">{service.contact}</span>
+          <div className="card-contact-actions">
+            {phoneNumber ? (
+              <a className="btn btn-secondary" href={`tel:${phoneNumber}`}>
+                Llamar
+              </a>
+            ) : null}
+            {hasWhatsapp && whatsappNumber ? (
+              <a
+                className="btn btn-secondary"
+                href={`https://wa.me/${whatsappNumber}`}
+                target="_blank"
+                rel="noopener noreferrer external"
+              >
+                WhatsApp
+              </a>
+            ) : null}
+          </div>
+        </div>
+      ) : (
+        <div className="card-contact">
+          <span className="card-contact-value">Contacto por confirmar</span>
+          {service.sourceUrl ? (
+            <a
+              className="btn btn-secondary"
+              href={service.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer external"
+            >
+              Consultar fuente oficial
+            </a>
+          ) : null}
+        </div>
+      )}
+
+      {service.verificationStatus === 'pendiente' ? (
+        <p className="card-pending">Información por confirmar</p>
+      ) : null}
 
       <footer className="card-foot">
         <VerificationBadge status={service.verificationStatus} compact />

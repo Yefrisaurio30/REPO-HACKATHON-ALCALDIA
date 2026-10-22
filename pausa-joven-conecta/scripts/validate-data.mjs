@@ -42,7 +42,7 @@ const ACTIVITY_CATEGORIES = new Set([
 ])
 
 const MODALITIES = new Set(['presencial', 'virtual', 'telefonica'])
-const VERIFICATION_STATUSES = new Set(['demo', 'pendiente'])
+const VERIFICATION_STATUSES = new Set(['demo', 'pendiente', 'verificado'])
 
 const errors = []
 const warnings = []
@@ -130,11 +130,14 @@ function checkCommon(record, fileName, requiredFields) {
   }
   if (!VERIFICATION_STATUSES.has(record.verificationStatus)) {
     fail(
-      `${where}: verificationStatus debe ser "demo" o "pendiente" en datos de demostración (es ${record.verificationStatus})`,
+      `${where}: verificationStatus debe ser "demo", "pendiente" o "verificado" (es ${record.verificationStatus})`,
     )
   }
-  if (record.isDemo !== true) {
-    fail(`${where}: isDemo debe ser true (es ${record.isDemo})`)
+  if (record.isDemo && record.verificationStatus === 'verificado') {
+    fail(`${where}: los registros de demostración no pueden tener verificationStatus "verificado"`)
+  }
+  if (!record.isDemo && record.verificationStatus === 'demo') {
+    fail(`${where}: los registros reales no deben tener verificationStatus "demo"`)
   }
   if (!MODALITIES.has(record.modality)) {
     fail(`${where}: modality desconocida "${record.modality}"`)
@@ -210,7 +213,9 @@ if (services) {
   if (!Array.isArray(services)) {
     fail('services.json: la raíz debe ser un arreglo')
   } else {
-    if (services.length < 12) fail(`services.json: se requieren al menos 12 servicios (hay ${services.length})`)
+    if (services.length !== 4) {
+      fail(`services.json: el directorio debe contener exactamente 4 servicios (hay ${services.length})`)
+    }
 
     for (const service of services) {
       const where = checkCommon(service, 'services.json', SERVICE_FIELDS)
@@ -223,8 +228,24 @@ if (services) {
       checkText(service.targetAudience, `${where}/targetAudience`)
       if (service.location !== null) checkText(service.location, `${where}/location`)
       if (service.notes !== null) checkText(service.notes, `${where}/notes`)
-      checkDemoContact(service.contact, where)
-      checkDemoUrl(service.sourceUrl, where, 'sourceUrl')
+
+      if (service.isDemo) {
+        checkDemoContact(service.contact, where)
+        checkDemoUrl(service.sourceUrl, where, 'sourceUrl')
+      } else {
+        if (typeof service.sourceUrl !== 'string' || !service.sourceUrl.startsWith('https://')) {
+          fail(`${where}: sourceUrl de registro real debe ser una fuente oficial (https://...)`)
+        }
+        if (service.verificationStatus !== 'pendiente') {
+          fail(
+            `${where}: registro real debe tener verificationStatus "pendiente" (es ${service.verificationStatus})`,
+          )
+        }
+        if (service.lastVerified !== null) {
+          fail(`${where}: registro real debe tener lastVerified en null mientras está pendiente de verificación`)
+        }
+      }
+
       checkLastVerified(service.lastVerified, where)
       checkNoPhoneLike(service.description, `${where}/description`)
       if (service.description.trim().length < 40) {

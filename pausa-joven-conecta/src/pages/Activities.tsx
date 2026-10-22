@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
+import ActivityCalendar from '../components/ActivityCalendar'
 import ActivityCard from '../components/ActivityCard'
 import Callout from '../components/Callout'
 import EmptyState from '../components/EmptyState'
 import FilterBar, { type FilterDefinition } from '../components/FilterBar'
+import Icon from '../components/Icon'
 import PageHeader from '../components/PageHeader'
 import SearchBar from '../components/SearchBar'
 import {
@@ -21,6 +23,14 @@ import type { ActivityStatusFilter } from '../data'
 const ALL = 'todas'
 const ALL_MONTHS = 'todos'
 
+type ViewMode = 'calendar' | 'tarjetas'
+
+/** Devuelve la clave `YYYY-MM` del mes de la fecha indicada. */
+function currentMonthKey(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  return `${date.getFullYear()}-${month}`
+}
+
 /** Agenda de actividades comunitarias. */
 export default function Activities() {
   const { query: routeQuery } = useRouter()
@@ -30,6 +40,9 @@ export default function Activities() {
   const [month, setMonth] = useState<string>(ALL_MONTHS)
   const [status, setStatus] = useState<ActivityStatusFilter>('proximas')
   const [lastRouteSearch, setLastRouteSearch] = useState(routeSearch)
+  const [view, setView] = useState<ViewMode>('calendar')
+  const [calendarMonth, setCalendarMonth] = useState<string>(() => currentMonthKey(new Date()))
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const now = useNow()
 
   // Si la búsqueda llega desde la página de inicio (`?q=...`), se aplica.
@@ -43,6 +56,33 @@ export default function Activities() {
     () => filterActivities({ query: search, category, month, status, now }),
     [search, category, month, status, now],
   )
+
+  /** Actividades del mes visible en el calendario que cumplen los filtros. */
+  const displayedMonthActivities = useMemo(
+    () =>
+      filterActivities({
+        query: search,
+        category,
+        month: calendarMonth,
+        status,
+        now,
+      }),
+    [search, category, calendarMonth, status, now],
+  )
+
+  /** Actividades del día seleccionado en el calendario. */
+  const selectedDayActivities = useMemo(() => {
+    if (!selectedDate) return []
+    return results.filter((activity) => activity.date === selectedDate)
+  }, [results, selectedDate])
+
+  const isCalendarView = view === 'calendar'
+  const showActivitiesForDate = isCalendarView && selectedDate !== null
+  const activitiesForView = showActivitiesForDate
+    ? selectedDayActivities
+    : isCalendarView
+      ? displayedMonthActivities
+      : results
 
   const hasFilters =
     search.trim() !== '' || category !== ALL || month !== ALL_MONTHS || status !== 'proximas'
@@ -72,7 +112,12 @@ export default function Activities() {
       id: 'filtro-actividad-mes',
       label: 'Fecha',
       value: month,
-      onChange: setMonth,
+      onChange: (value) => {
+        setMonth(value)
+        if (value !== ALL_MONTHS) {
+          setCalendarMonth(value)
+        }
+      },
       options: [
         { value: ALL_MONTHS, label: 'Todos los meses' },
         ...activityMonths.map((value) => ({ value, label: formatMonth(value) })),
@@ -90,6 +135,39 @@ export default function Activities() {
       ],
     },
   ]
+
+  const handleCalendarMonthChange = (nextMonth: string) => {
+    setCalendarMonth(nextMonth)
+    setMonth(nextMonth)
+  }
+
+  const handleSelectDate = (date: string) => {
+    const nextDate = selectedDate === date ? null : date
+    setSelectedDate(nextDate)
+    if (nextDate) {
+      const nextMonth = nextDate.slice(0, 7)
+      setMonth(nextMonth)
+      setCalendarMonth(nextMonth)
+    }
+  }
+
+  const emptyStateTitle = showActivitiesForDate
+    ? 'No hay actividades programadas para este día'
+    : isCalendarView
+      ? 'No hay actividades programadas para este mes'
+      : 'No hay actividades para estos filtros'
+
+  const emptyStateDescription = showActivitiesForDate
+    ? 'Prueba con otra fecha del calendario o ajusta los filtros para ver otras actividades.'
+    : isCalendarView
+      ? 'Usa los botones de navegación para explorar otros meses o ajusta los filtros aplicados.'
+      : 'Prueba con otro mes, cambia la categoría o muestra todas las actividades, incluidas las que ya se realizaron.'
+
+  const emptyStateAction = (
+    <button type="button" className="btn btn-secondary" onClick={resetFilters}>
+      Quitar filtros
+    </button>
+  )
 
   return (
     <>
@@ -110,6 +188,27 @@ export default function Activities() {
           Resultados de la agenda de actividades
         </h2>
 
+        <div className="view-switch" role="group" aria-label="Cambiar la vista de la agenda">
+          <button
+            type="button"
+            className={`view-switch-option${view === 'calendar' ? ' is-active' : ''}`}
+            aria-pressed={view === 'calendar'}
+            onClick={() => setView('calendar')}
+          >
+            <Icon name="calendar" size={16} />
+            Calendario
+          </button>
+          <button
+            type="button"
+            className={`view-switch-option${view === 'tarjetas' ? ' is-active' : ''}`}
+            aria-pressed={view === 'tarjetas'}
+            onClick={() => setView('tarjetas')}
+          >
+            <Icon name="list" size={16} />
+            Tarjetas
+          </button>
+        </div>
+
         <div className="filters-panel">
           <SearchBar
             id="busqueda-actividades"
@@ -127,26 +226,32 @@ export default function Activities() {
           />
         </div>
 
+        {view === 'calendar' ? (
+          <ActivityCalendar
+            month={calendarMonth}
+            activities={displayedMonthActivities}
+            selectedDate={selectedDate}
+            onMonthChange={handleCalendarMonthChange}
+            onSelectDate={handleSelectDate}
+          />
+        ) : null}
+
         <p className="results-count" role="status" aria-live="polite">
-          {results.length === 1
+          {activitiesForView.length === 1
             ? '1 actividad en la agenda'
-            : `${results.length} actividades en la agenda`}
+            : `${activitiesForView.length} actividades en la agenda`}
           {hasFilters ? ' con los filtros aplicados' : ''}
         </p>
 
-        {results.length === 0 ? (
+        {activitiesForView.length === 0 ? (
           <EmptyState
-            title="No hay actividades para estos filtros"
-            description="Prueba con otro mes, cambia la categoría o muestra todas las actividades, incluidas las que ya se realizaron."
-            action={
-              <button type="button" className="btn btn-secondary" onClick={resetFilters}>
-                Quitar filtros
-              </button>
-            }
+            title={emptyStateTitle}
+            description={emptyStateDescription}
+            action={emptyStateAction}
           />
         ) : (
           <div className="card-grid">
-            {results.map((activity) => (
+            {activitiesForView.map((activity) => (
               <ActivityCard key={activity.id} activity={activity} now={now} />
             ))}
           </div>

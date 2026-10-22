@@ -9,7 +9,6 @@ import {
   filterServices,
   modalities,
   serviceCategories,
-  services,
 } from '../data'
 import { MODALITY_LABELS, SERVICE_CATEGORY_LABELS } from '../data/labels'
 import { useRouter } from '../router/hooks'
@@ -80,12 +79,11 @@ export default function Services() {
         description="Busca por nombre o descripción y filtra por categoría o modalidad. Cada ficha indica su fuente, la fecha de consulta y el estado de verificación del dato."
       />
 
-      <Callout tone="demo" title="DATOS FICTICIOS DE DEMOSTRACIÓN">
-        Los registros de este directorio son ficticios: sirven para probar el
-        buscador y los filtros. No corresponden a instituciones reales de
-        Villavicencio, no tienen datos de contacto confirmados y no deben usarse
-        para tomar decisiones. Hay {services.length} registros de ejemplo cargados
-        en el prototipo.
+      <Callout tone="info" title="Canales institucionales sujetos a verificación">
+        Este directorio reúne canales institucionales de Villavicencio sujetos a
+        verificación. Algunos datos de contacto o ubicaciones pueden estar pendientes
+        de confirmación. Consulta siempre la fuente oficial antes de tomar una
+        decisión.
       </Callout>
 
       <section className="section" aria-labelledby="titulo-resultados">
