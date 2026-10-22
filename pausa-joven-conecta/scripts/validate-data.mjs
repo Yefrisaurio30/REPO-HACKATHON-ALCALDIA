@@ -51,8 +51,12 @@ const ACTIVITY_CATEGORIES = new Set([
 ])
 
 const MODALITIES = new Set(['presencial', 'virtual', 'telefonica'])
+<<<<<<< HEAD
+const VERIFICATION_STATUSES = new Set(['demo', 'pendiente', 'verificado'])
+=======
 const DEMO_STATUSES = new Set(['demo', 'pendiente'])
 const REAL_STATUSES = new Set(['pendiente', 'verificado'])
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
 
 const errors = []
 const warnings = []
@@ -138,6 +142,18 @@ function checkCommon(record, fileName, requiredFields) {
   if (typeof record.id !== 'string' || !record.id.trim()) {
     fail(`${where}: id ausente o vacío`)
   }
+<<<<<<< HEAD
+  if (!VERIFICATION_STATUSES.has(record.verificationStatus)) {
+    fail(
+      `${where}: verificationStatus debe ser "demo", "pendiente" o "verificado" (es ${record.verificationStatus})`,
+    )
+  }
+  if (record.isDemo && record.verificationStatus === 'verificado') {
+    fail(`${where}: los registros de demostración no pueden tener verificationStatus "verificado"`)
+  }
+  if (!record.isDemo && record.verificationStatus === 'demo') {
+    fail(`${where}: los registros reales no deben tener verificationStatus "demo"`)
+=======
   if (typeof record.isDemo !== 'boolean') {
     fail(`${where}: isDemo debe ser true o false (es ${record.isDemo})`)
     return where
@@ -161,6 +177,7 @@ function checkCommon(record, fileName, requiredFields) {
     if (typeof record.notes !== 'string' || !record.notes.trim()) {
       fail(`${where}: un registro real debe declarar sus notas de verificación en "notes"`)
     }
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
   }
 
   if (!MODALITIES.has(record.modality)) {
@@ -263,7 +280,9 @@ if (services) {
   if (!Array.isArray(services)) {
     fail('services.json: la raíz debe ser un arreglo')
   } else {
-    if (services.length < 12) fail(`services.json: se requieren al menos 12 servicios (hay ${services.length})`)
+    if (services.length !== 4) {
+      fail(`services.json: el directorio debe contener exactamente 4 servicios (hay ${services.length})`)
+    }
 
     for (const service of services) {
       const where = checkCommon(service, 'services.json', SERVICE_FIELDS)
@@ -276,13 +295,33 @@ if (services) {
       checkText(service.targetAudience, `${where}/targetAudience`)
       if (service.location !== null) checkText(service.location, `${where}/location`)
       if (service.notes !== null) checkText(service.notes, `${where}/notes`)
+<<<<<<< HEAD
+
+=======
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
       if (service.isDemo) {
         checkDemoContact(service.contact, where)
         checkDemoUrl(service.sourceUrl, where, 'sourceUrl')
       } else {
+<<<<<<< HEAD
+        if (typeof service.sourceUrl !== 'string' || !service.sourceUrl.startsWith('https://')) {
+          fail(`${where}: sourceUrl de registro real debe ser una fuente oficial (https://...)`)
+        }
+        if (service.verificationStatus !== 'pendiente') {
+          fail(
+            `${where}: registro real debe tener verificationStatus "pendiente" (es ${service.verificationStatus})`,
+          )
+        }
+        if (service.lastVerified !== null) {
+          fail(`${where}: registro real debe tener lastVerified en null mientras está pendiente de verificación`)
+        }
+      }
+
+=======
         checkRealContact(service.contact, where)
         checkRealUrl(service.sourceUrl, where, 'sourceUrl')
       }
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
       checkLastVerified(service.lastVerified, where)
       checkNoPhoneLike(service.description, `${where}/description`)
       if (service.description.trim().length < 40) {

@@ -8,6 +8,12 @@ import { ACTIVITY_CATEGORY_LABELS, MODALITY_LABELS } from '../data/labels'
 import { useNow } from '../hooks/useNow'
 import { Link } from '../router'
 import { useRouteMatch } from '../router/hooks'
+import {
+  buildCalendarEvent,
+  buildGoogleCalendarUrl,
+  buildIcsContent,
+  downloadCalendarEvent,
+} from '../utils/ics'
 
 /** Detalle de una actividad de la agenda. */
 export default function ActivityDetail() {
@@ -43,6 +49,15 @@ export default function ActivityDetail() {
   }
 
   const isPast = isPastActivity(activity, now)
+
+  const calendarEvent = buildCalendarEvent(activity)
+  const googleCalendarUrl = calendarEvent ? buildGoogleCalendarUrl(activity) : null
+
+  const handleDownloadCalendar = () => {
+    const content = buildIcsContent(activity)
+    if (!content || !calendarEvent) return
+    downloadCalendarEvent(content, `vibralink-${activity.id}.ics`)
+  }
 
   return (
     <>
@@ -143,45 +158,46 @@ export default function ActivityDetail() {
             )}
           </section>
 
-          <section className="detail-block" aria-labelledby="titulo-inscripcion">
-            <h2 className="detail-block-title" id="titulo-inscripcion">
-              <Icon name="ticket" size={18} />
-              Participar
+          <section className="detail-block" aria-labelledby="titulo-calendario">
+            <h2 className="detail-block-title" id="titulo-calendario">
+              <Icon name="calendar" size={18} />
+              Agregar a mi calendario
             </h2>
 
-            {activity.registrationUrl ? (
-              activity.verificationStatus === 'verificado' && !isPast ? (
-                <SourceLink
-                  url={activity.registrationUrl}
-                  label="Ir al enlace de inscripción"
-                  note="Enlace verificado en la fuente oficial."
-                />
-              ) : (
-                <Callout tone="warning" title="Enlace de participación sin verificar">
-                  <p>
-                    {isPast
-                      ? 'La actividad ya se realizó, así que este enlace no está activo.'
-                      : 'El enlace apunta a un marcador de posición del prototipo: no abre un formulario real.'}
-                  </p>
-                  <p>
+            {calendarEvent ? (
+              <>
+                <p className="detail-text">
+                  Guarda este evento en tu calendario personal con la fecha y hora reales de
+                  la actividad. Esto no equivale a una inscripción ni reemplaza la revisión de
+                  la fuente oficial.
+                </p>
+                <div className="detail-actions">
+                  <button type="button" className="btn btn-primary" onClick={handleDownloadCalendar}>
+                    Agregar a mi calendario
+                  </button>
+                  {googleCalendarUrl ? (
                     <a
-                      className="source-link-anchor"
-                      href={activity.registrationUrl}
+                      className="btn btn-secondary"
+                      href={googleCalendarUrl}
                       target="_blank"
                       rel="noopener noreferrer external"
                     >
-                      <span>Abrir el enlace de ejemplo</span>
-                      <Icon name="external" size={16} />
-                      <span className="sr-only">(se abre en una pestaña nueva)</span>
+                      Abrir en Google Calendar
                     </a>
-                  </p>
-                </Callout>
-              )
+                  ) : null}
+                </div>
+                <p className="detail-note">
+                  El archivo se genera en tu dispositivo y no envía información a ningún
+                  servidor. Las notificaciones dependen de la configuración de calendario de tu
+                  aplicación.
+                </p>
+              </>
             ) : (
-              <Callout tone="info" title="No hay enlace de inscripción publicado">
+              <Callout tone="info" title="Falta información para agregar el evento al calendario">
                 <p>
-                  La fuente de esta actividad no incluye un enlace de
-                  participación. Se mostrará en cuanto exista y se pueda verificar.
+                  Esta actividad todavía no tiene fecha y hora listas para generar el evento, así
+                  que no se puede agregar al calendario personal. Confirma la información con la
+                  fuente oficial y vuelve a intentar.
                 </p>
               </Callout>
             )}
