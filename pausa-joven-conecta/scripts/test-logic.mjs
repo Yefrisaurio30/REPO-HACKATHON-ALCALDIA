@@ -247,35 +247,10 @@ test('los identificadores de los registros son únicos', () => {
   assert.equal(new Set(activityIds).size, activityIds.length)
 })
 
-<<<<<<< HEAD
 test('los servicios reales están pendientes y las actividades demo son ficticias', () => {
   for (const service of services) {
     assert.equal(service.isDemo, false, `${service.id} debe ser un servicio real`)
     assert.equal(service.verificationStatus, 'pendiente', `${service.id} debe estar pendiente de verificación`)
-=======
-test('los registros ficticios y los reales cumplen sus reglas de verificación', () => {
-  for (const service of services) {
-    if (service.isDemo) {
-      assert.notEqual(service.verificationStatus, 'verificado')
-      continue
-    }
-    // Registro real: sin fecha de consulta no puede publicarse como vigente.
-    assert.ok(
-      ['pendiente', 'verificado'].includes(service.verificationStatus),
-      `${service.id}: un registro real debe ser pendiente o verificado`,
-    )
-    if (service.verificationStatus === 'verificado') {
-      assert.match(
-        service.lastVerified ?? '',
-        /^\d{4}-\d{2}-\d{2}$/,
-        `${service.id}: "verificado" exige fecha de consulta en lastVerified`,
-      )
-    }
-    assert.ok(
-      service.notes && service.notes.trim().length > 0,
-      `${service.id}: un registro real debe declarar sus notas de verificación`,
-    )
->>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
   }
   for (const activity of activities) {
     assert.equal(activity.isDemo, true, `${activity.id} debe ser isDemo`)
@@ -283,22 +258,14 @@ test('los registros ficticios y los reales cumplen sus reglas de verificación',
   }
 })
 
-<<<<<<< HEAD
 test('los enlaces de demostración solo usan el dominio reservado demo.example', () => {
   const urls = [
     ...activities.map((item) => item.sourceUrl),
     ...activities.map((item) => item.registrationUrl),
-=======
-test('los enlaces ficticios solo usan demo.example y los reales una fuente oficial', () => {
-  const demoUrls = [
-    ...services.filter((item) => item.isDemo).map((item) => item.sourceUrl),
-    ...activities.filter((item) => item.isDemo).map((item) => item.sourceUrl),
-    ...activities.filter((item) => item.isDemo).map((item) => item.registrationUrl),
->>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
   ].filter(Boolean)
 
-  assert.ok(demoUrls.length > 0)
-  for (const url of demoUrls) {
+  assert.ok(urls.length > 0)
+  for (const url of urls) {
     assert.ok(url.startsWith('https://demo.example/'), `URL de demo no permitida: ${url}`)
   }
 
@@ -315,7 +282,6 @@ test('los enlaces ficticios solo usan demo.example y los reales una fuente ofici
   }
 })
 
-<<<<<<< HEAD
 test('los servicios del directorio son los cuatro canales institucionales esperados', () => {
   const ids = services.map((item) => item.id)
   assert.deepEqual(ids.sort(), [
@@ -324,17 +290,6 @@ test('los servicios del directorio son los cuatro canales institucionales espera
     'servicios-amigables-salud-villavicencio',
     'yo-te-escucho-villavicencio',
   ].sort())
-=======
-test('los registros ficticios no contienen teléfonos ni contactos reales', () => {
-  for (const service of services) {
-    if (!service.isDemo || !service.contact) continue
-    assert.match(service.contact.toLowerCase(), /ejemplo/)
-    assert.ok(
-      !/\d{3}[\s-]?\d{3}[\s-]?\d{4}/.test(service.contact),
-      `${service.id}: el contacto ficticio no puede contener un teléfono`,
-    )
-  }
->>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
 })
 
 test('cada registro tiene la fecha de consulta o deja constancia de que no la tiene', () => {

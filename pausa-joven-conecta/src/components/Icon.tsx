@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react'
 
 export type IconName =
@@ -23,13 +24,10 @@ export type IconName =
   | 'filter'
   | 'book'
   | 'compass'
-<<<<<<< HEAD
   | 'chevron-left'
   | 'chevron-right'
   | 'list'
-=======
   | 'whatsapp'
->>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
 
 const PATHS: Record<IconName, ReactNode> = {
   search: (
@@ -159,7 +157,6 @@ const PATHS: Record<IconName, ReactNode> = {
       <path d="M15.5 8.5l-2 5-5 2 2-5 5-2z" />
     </>
   ),
-<<<<<<< HEAD
   'chevron-left': <polyline points="15 18 9 12 15 6" />,
   'chevron-right': <polyline points="9 18 15 12 9 6" />,
   list: (
@@ -167,12 +164,12 @@ const PATHS: Record<IconName, ReactNode> = {
       <line x1="8" y1="6" x2="21" y2="6" />
       <line x1="8" y1="12" x2="21" y2="12" />
       <line x1="8" y1="18" x2="21" y2="18" />
-=======
+    </>
+  ),
   whatsapp: (
     <>
       <path d="M18.05 4.92c-5.03-.87-9.09 3.37-9.96 8.4-.15.89-.12 1.78.07 2.66l-.16 4.57c-.03.83.52 1.5 1.25 1.5h.06c.35 0 .69-.1.97-.27l2.21-1.18c.51.26 1.07.39 1.62.39 2.43 0 4.51-1.15 5.77-2.9 1.23-1.7 1.2-3.9-.1-5.54-1.46-1.83-4.08-2.57-6.31-1.8z" />
       <path d="M12 2.3C6.5 2.3 2 6.8 2 12.3c0 1.98.58 3.86 1.6 5.44L2 22l5.58-1.6c1.5.96 3.3 1.6 5.4 1.6 5.5 0 10-4.5 10-10S17.5 2.3 12 2.3z" />
->>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
     </>
   ),
 }

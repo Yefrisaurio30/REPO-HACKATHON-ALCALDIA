@@ -1,3 +1,4 @@
+
 import { MODALITY_LABELS, SERVICE_CATEGORY_LABELS } from '../data/labels'
 import { servicePath } from '../router/routes'
 import { Link } from '../router'
@@ -12,29 +13,28 @@ type ServiceCardProps = {
 
 /** Extrae el primer número de teléfono de un texto de contacto. */
 function extractPhoneNumber(value: string): string {
-  const match = value.match(/(\+?\d[\d\s]{1,}\d)/)
+  const match = value.match(/(\+?\d[\d\s-]{1,}\d)/)
   if (!match) return ''
   return match[1].replace(/[\s-]/g, '')
 }
 
 /** Tarjeta de un servicio del directorio. */
 export default function ServiceCard({ service }: ServiceCardProps) {
-<<<<<<< HEAD
   const contact = service.contact
   const phoneNumber = contact ? extractPhoneNumber(contact) : ''
-  const whatsappNumber = contact ? extractPhoneNumber(contact).replace(/^57/, '') : ''
   const hasWhatsapp = contact ? /whatsapp/i.test(contact) : false
-=======
+
   const locationLabel =
     service.city && service.department
       ? `${service.city}, ${service.department}`
       : (service.location ?? 'Ubicación por confirmar')
->>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
 
   return (
     <article className="card service-card" data-service-id={service.id}>
       <div className="card-topline">
-        <span className="chip chip-purple">{SERVICE_CATEGORY_LABELS[service.category]}</span>
+        <span className="chip chip-purple">
+          {SERVICE_CATEGORY_LABELS[service.category]}
+        </span>
         {service.isDemo ? <DemoBadge /> : null}
       </div>
 
@@ -68,19 +68,20 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         </li>
       </ul>
 
-      {service.contact ? (
+      {contact ? (
         <div className="card-contact">
-          <span className="card-contact-value">{service.contact}</span>
+          <span className="card-contact-value">{contact}</span>
           <div className="card-contact-actions">
             {phoneNumber ? (
               <a className="btn btn-secondary" href={`tel:${phoneNumber}`}>
                 Llamar
               </a>
             ) : null}
-            {hasWhatsapp && whatsappNumber ? (
+
+            {hasWhatsapp && phoneNumber ? (
               <a
                 className="btn btn-secondary"
-                href={`https://wa.me/${whatsappNumber}`}
+                href={`https://wa.me/${phoneNumber.replace(/^\+/, '')}`}
                 target="_blank"
                 rel="noopener noreferrer external"
               >
@@ -91,7 +92,9 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         </div>
       ) : (
         <div className="card-contact">
-          <span className="card-contact-value">Contacto por confirmar</span>
+          <span className="card-contact-value">
+            Contacto por confirmar
+          </span>
           {service.sourceUrl ? (
             <a
               className="btn btn-secondary"

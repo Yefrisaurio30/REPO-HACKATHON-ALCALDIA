@@ -79,21 +79,11 @@ export default function Services() {
         description="Busca por nombre o descripción y filtra por categoría o modalidad. Cada ficha indica su fuente, la fecha de consulta y el estado de verificación del dato."
       />
 
-<<<<<<< HEAD
       <Callout tone="info" title="Canales institucionales sujetos a verificación">
         Este directorio reúne canales institucionales de Villavicencio sujetos a
         verificación. Algunos datos de contacto o ubicaciones pueden estar pendientes
         de confirmación. Consulta siempre la fuente oficial antes de tomar una
         decisión.
-=======
-      <Callout tone="demo" title="DATOS FICTICIOS DE DEMOSTRACIÓN">
-        La mayoría de registros de este directorio son ficticios: sirven para
-        probar el buscador y los filtros, no corresponden a instituciones
-        reales y no deben usarse para tomar decisiones. Los registros reales
-        están etiquetados como «Pendiente de verificación» y muestran un aviso
-        antes de cada contacto. Hay {services.length} registros cargados en el
-        prototipo.
->>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
       </Callout>
 
       <section className="section" aria-labelledby="titulo-resultados">
