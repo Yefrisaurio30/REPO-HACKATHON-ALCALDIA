@@ -6,15 +6,18 @@
  * de cada registro.
  *
  * Reglas del proyecto (ver `scripts/validate-data.mjs`):
- *  - Todo registro del prototipo es ficticio: `isDemo` es `true`.
+ *  - Los registros ficticios declaran `isDemo: true`; los reales, `isDemo: false`.
  *  - `verificationStatus` describe el estado de verificación de la fuente:
  *      - `demo`      → registro ficticio, sin fuente real consultada.
  *      - `pendiente` → se tiene un dato (por ejemplo un contacto) que aún no
  *                      se ha podido confirmar contra una fuente oficial.
- *      - `verificado`→ la fuente oficial se consultó y el dato está vigente.
- *                      reservado para cuando existan fuentes reales.
- *  - `sourceUrl` y `registrationUrl` de registros de demostración solo pueden
- *    apuntar al dominio reservado `demo.example`, que nunca resuelve.
+ *      - `verificado`→ la fuente oficial se consultó y el dato está vigente;
+ *                      exige `lastVerified` con fecha de consulta.
+ *  - Un registro real sin fecha de consulta debe quedar en `pendiente` con
+ *    notas: nunca se publica un teléfono como vigente sin fuente y fecha.
+ *  - Los `sourceUrl` y `registrationUrl` de registros ficticios solo pueden
+ *    apuntar al dominio reservado `demo.example`, que nunca resuelve; los de
+ *    registros reales deben ser una fuente oficial `https://`.
  */
 
 export type ServiceCategory =
@@ -37,6 +40,34 @@ export type Modality = 'presencial' | 'virtual' | 'telefonica'
 
 export type VerificationStatus = 'demo' | 'pendiente' | 'verificado'
 
+/** Información de contacto estructurada (teléfono y WhatsApp). */
+export interface ServiceContact {
+  phone: string | null
+  whatsapp: string | null
+}
+
+/** Horario de atención del servicio. */
+export interface ServiceSchedule {
+  description: string
+  /** `true` cuando la fuente oficial confirmó el horario. */
+  verified: boolean
+}
+
+/** Ubicación física del servicio. */
+export interface ServiceLocation {
+  name: string
+  address: string
+  purpose: string
+  verified: boolean
+}
+
+/** Paso de la ruta de atención integral. */
+export interface SupportRouteStep {
+  step: number
+  title: string
+  description: string
+}
+
 /** Servicio de orientación o bienestar incluido en el directorio. */
 export interface Service {
   id: string
@@ -50,6 +81,20 @@ export interface Service {
   location: string | null
   /** Contacto publicado por la fuente. `null` cuando no hay dato confirmado. */
   contact: string | null
+  /** Ciudad del servicio (opcional). */
+  city?: string
+  /** Departamento del servicio (opcional). */
+  department?: string
+  /** Contacto estructurado: teléfono y WhatsApp (opcional). */
+  contactStructured?: ServiceContact
+  /** Horario de atención (opcional). */
+  schedule?: ServiceSchedule
+  /** Ubicaciones físicas del servicio (opcional). */
+  locations?: ServiceLocation[]
+  /** Información sobre atención presencial o visita a domicilio (opcional). */
+  homeVisitInformation?: string
+  /** Ruta de atención integral (opcional). */
+  supportRoute?: SupportRouteStep[]
   /** URL de la fuente oficial. `null` cuando todavía no hay fuente. */
   sourceUrl: string | null
   /** Fecha (YYYY-MM-DD) en que se consultó la fuente. */

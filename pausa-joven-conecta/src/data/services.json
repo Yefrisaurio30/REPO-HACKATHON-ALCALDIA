@@ -26,6 +26,7 @@
     "sourceUrl": "https://www.icbf.gov.co/linea-141",
     "lastVerified": null,
     "verificationStatus": "pendiente",
+<<<<<<< HEAD
     "isDemo": false,
     "notes": "La información vigente de la línea 141 está pendiente de revisión."
   },
@@ -58,5 +59,66 @@
     "verificationStatus": "pendiente",
     "isDemo": false,
     "notes": "La ubicación debe mostrarse como pendiente de confirmación hasta comprobar que el programa continúa funcionando."
+=======
+    "isDemo": true,
+    "notes": "Registro pendiente de verificación: la fecha corresponde a la revisión del registro de demostración."
+  },
+  {
+    "id": "yo-te-escucho-villavicencio",
+    "name": "Yo Te Escucho",
+    "category": "orientacion",
+    "description": "Canal de orientación y acompañamiento emocional para habitantes de Villavicencio, Meta.",
+    "city": "Villavicencio",
+    "department": "Meta",
+    "modality": "telefonica",
+    "targetAudience": "Habitantes de Villavicencio, Meta",
+    "location": "Sede principal E.S.E. Municipal, Calle 31 con Carrera 11, barrio El Recreo, Villavicencio, Meta",
+    "contact": "Línea gratuita 018000931089 y WhatsApp +573163907010",
+    "contactStructured": {
+      "phone": "018000931089",
+      "whatsapp": "+573163907010"
+    },
+    "schedule": {
+      "description": "Atención 24 horas al día, 7 días a la semana",
+      "verified": false
+    },
+    "locations": [
+      {
+        "name": "Sede principal E.S.E. Municipal",
+        "address": "Calle 31 con Carrera 11, barrio El Recreo, Villavicencio, Meta",
+        "purpose": "Sede administrativa y atención de urgencias",
+        "verified": false
+      },
+      {
+        "name": "Centro de Salud La Esperanza",
+        "address": "Carrera 12 No. 47B-03, barrio La Esperanza, Villavicencio, Meta",
+        "purpose": "Centro de salud de referencia; horario por confirmar",
+        "verified": false
+      }
+    ],
+    "homeVisitInformation": "La información suministrada indica que puede existir atención presencial. El procedimiento debe confirmarse con la entidad.",
+    "supportRoute": [
+      {
+        "step": 1,
+        "title": "Contacto e intervención inicial",
+        "description": "Contactar el canal telefónico o WhatsApp para solicitar orientación."
+      },
+      {
+        "step": 2,
+        "title": "Orientación sobre atención presencial",
+        "description": "Consultar con el equipo responsable si corresponde activar atención presencial."
+      },
+      {
+        "step": 3,
+        "title": "Canalización y seguimiento",
+        "description": "Solicitar orientación sobre los servicios de salud correspondientes y los pasos para continuar la atención."
+      }
+    ],
+    "sourceUrl": "https://villavicencio.gov.co/linea-emocional-yo-te-escucho-atendio-441-casos-en-salud-mental-durante-el-ultimo-trimestre/",
+    "lastVerified": null,
+    "verificationStatus": "pendiente",
+    "isDemo": false,
+    "notes": "Datos proporcionados para el proyecto. No se ha confirmado vigencia de números, horarios, direcciones y procedimientos con fuente institucional oficial."
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
   }
 ]

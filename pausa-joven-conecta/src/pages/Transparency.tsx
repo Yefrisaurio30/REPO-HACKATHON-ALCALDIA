@@ -121,9 +121,10 @@ export default function Transparency() {
       />
 
       <Callout tone="demo" title="DATOS FICTICIOS DE DEMOSTRACIÓN">
-        El prototipo se alimenta de registros ficticios identificados como tales.
-        Ningún dato de este sitio corresponde a una institución real de
-        Villavicencio.
+        El prototipo se alimenta sobre todo de registros ficticios identificados
+        como tales. Los registros reales se etiquetan como «Pendiente de
+        verificación» y nunca se presentan como vigentes sin fuente oficial y
+        fecha de consulta.
       </Callout>
 
       <section className="section" aria-labelledby="titulo-proceso">

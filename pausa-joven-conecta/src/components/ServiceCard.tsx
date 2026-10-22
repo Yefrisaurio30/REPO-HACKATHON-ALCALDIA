@@ -19,10 +19,17 @@ function extractPhoneNumber(value: string): string {
 
 /** Tarjeta de un servicio del directorio. */
 export default function ServiceCard({ service }: ServiceCardProps) {
+<<<<<<< HEAD
   const contact = service.contact
   const phoneNumber = contact ? extractPhoneNumber(contact) : ''
   const whatsappNumber = contact ? extractPhoneNumber(contact).replace(/^57/, '') : ''
   const hasWhatsapp = contact ? /whatsapp/i.test(contact) : false
+=======
+  const locationLabel =
+    service.city && service.department
+      ? `${service.city}, ${service.department}`
+      : (service.location ?? 'Ubicación por confirmar')
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
 
   return (
     <article className="card service-card" data-service-id={service.id}>
@@ -56,7 +63,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           <Icon name="pin" size={16} />
           <span>
             <span className="meta-label">Lugar</span>
-            {service.location ?? 'Ubicación por confirmar'}
+            {locationLabel}
           </span>
         </li>
       </ul>

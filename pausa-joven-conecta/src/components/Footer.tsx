@@ -38,8 +38,9 @@ export default function Footer() {
           <ul className="footer-list">
             <li>
               <Icon name="flag" size={16} />
-              Todos los registros del prototipo son ficticios y están marcados
-              como «DATOS FICTICIOS DE DEMOSTRACIÓN».
+              La mayoría de registros del prototipo son ficticios y están
+              marcados como «DATOS FICTICIOS DE DEMOSTRACIÓN»; los reales
+              aparecen como «Pendiente de verificación».
             </li>
             <li>
               <Icon name="info" size={16} />

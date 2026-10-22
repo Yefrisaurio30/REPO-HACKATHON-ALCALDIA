@@ -1,16 +1,25 @@
 /**
- * Valida los datos de demostración de VibraLink.
+ * Valida los datos de VibraLink (registros ficticios y reales).
  * Uso: npm run validate:data
  *
  * No requiere dependencias externas: solo usa Node.js.
  *
- * Reglas de seguridad del proyecto:
- *  - Todos los registros son ficticios (`isDemo: true`) y su estado nunca es
- *    `verificado`, porque no se ha consultado ninguna fuente real.
- *  - Los enlaces solo pueden apuntar al dominio reservado `demo.example`,
- *    que por definición nunca resuelve (RFC 2606).
- *  - Los contactos de ejemplo deben contener la palabra «ejemplo» y un
- *    correo del mismo dominio reservado. Nunca hay teléfonos reales.
+ * Reglas del proyecto:
+ *  - Registros ficticios (`isDemo: true`):
+ *      - Su estado nunca es `verificado`, porque no se consultó ninguna fuente.
+ *      - Los enlaces solo apuntan al dominio reservado `demo.example`,
+ *        que por definición nunca resuelve (RFC 2606).
+ *      - El contacto contiene la palabra «ejemplo», un correo @demo.example y
+ *        nunca un teléfono real.
+ *  - Registros reales (`isDemo: false`):
+ *      - Requieren fuente oficial `https://` (nunca el dominio de demo) y
+ *        notas (`notes`) que declaren el estado de verificación.
+ *      - Sin fecha de consulta (`lastVerified`) su estado debe ser
+ *        `pendiente`: ningún teléfono se publica como vigente sin fuente
+ *        oficial y fecha de consulta.
+ *      - Solo con fecha de consulta válida pueden ser `verificado`.
+ *  - Ningún registro contiene datos personales: los teléfonos reales son
+ *    líneas institucionales públicas declaradas como pendientes.
  */
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -42,7 +51,12 @@ const ACTIVITY_CATEGORIES = new Set([
 ])
 
 const MODALITIES = new Set(['presencial', 'virtual', 'telefonica'])
+<<<<<<< HEAD
 const VERIFICATION_STATUSES = new Set(['demo', 'pendiente', 'verificado'])
+=======
+const DEMO_STATUSES = new Set(['demo', 'pendiente'])
+const REAL_STATUSES = new Set(['pendiente', 'verificado'])
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
 
 const errors = []
 const warnings = []
@@ -128,6 +142,7 @@ function checkCommon(record, fileName, requiredFields) {
   if (typeof record.id !== 'string' || !record.id.trim()) {
     fail(`${where}: id ausente o vacío`)
   }
+<<<<<<< HEAD
   if (!VERIFICATION_STATUSES.has(record.verificationStatus)) {
     fail(
       `${where}: verificationStatus debe ser "demo", "pendiente" o "verificado" (es ${record.verificationStatus})`,
@@ -138,7 +153,33 @@ function checkCommon(record, fileName, requiredFields) {
   }
   if (!record.isDemo && record.verificationStatus === 'demo') {
     fail(`${where}: los registros reales no deben tener verificationStatus "demo"`)
+=======
+  if (typeof record.isDemo !== 'boolean') {
+    fail(`${where}: isDemo debe ser true o false (es ${record.isDemo})`)
+    return where
   }
+
+  if (record.isDemo) {
+    if (!DEMO_STATUSES.has(record.verificationStatus)) {
+      fail(
+        `${where}: un registro ficticio debe ser "demo" o "pendiente", nunca "verificado" (es ${record.verificationStatus})`,
+      )
+    }
+  } else {
+    if (!REAL_STATUSES.has(record.verificationStatus)) {
+      fail(`${where}: un registro real debe ser "pendiente" o "verificado" (es ${record.verificationStatus})`)
+    }
+    if (record.verificationStatus === 'verificado' && !isValidDate(record.lastVerified)) {
+      fail(
+        `${where}: un registro real solo puede ser "verificado" con fecha de consulta en "lastVerified"`,
+      )
+    }
+    if (typeof record.notes !== 'string' || !record.notes.trim()) {
+      fail(`${where}: un registro real debe declarar sus notas de verificación en "notes"`)
+    }
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
+  }
+
   if (!MODALITIES.has(record.modality)) {
     fail(`${where}: modality desconocida "${record.modality}"`)
   }
@@ -166,6 +207,25 @@ function checkDemoUrl(value, where, field) {
   }
 }
 
+/** La fuente de un registro real debe ser oficial, https y no de demostración. */
+function checkRealUrl(value, where, field) {
+  if (value === null || value === undefined) {
+    fail(`${where}: un registro real requiere "${field}" con la fuente oficial`)
+    return
+  }
+  if (typeof value !== 'string' || !value.startsWith('https://')) {
+    fail(`${where}: "${field}" de un registro real debe empezar por https://`)
+    return
+  }
+  if (value.includes(DEMO_DOMAIN)) {
+    fail(`${where}: "${field}" de un registro real no puede usar ${DEMO_DOMAIN}`)
+    return
+  }
+  if (!value.includes('gov.co')) {
+    warn(`${where}: "${field}" no parece un dominio institucional (se esperaba una fuente oficial)`)
+  }
+}
+
 /** El contacto de ejemplo debe ser claramente ficticio. */
 function checkDemoContact(value, where) {
   if (value === null || value === undefined) return
@@ -181,6 +241,13 @@ function checkDemoContact(value, where) {
     fail(`${where}: "contact" debe usar el correo reservado @${DEMO_DOMAIN}`)
   }
   checkNoPhoneLike(value, `${where}/contact`)
+}
+
+/** El contacto de un registro real debe existir (puede incluir líneas públicas). */
+function checkRealContact(value, where) {
+  if (typeof value !== 'string' || !value.trim()) {
+    fail(`${where}: "contact" vacío en un registro real`)
+  }
 }
 
 function isValidDate(value) {
@@ -228,11 +295,15 @@ if (services) {
       checkText(service.targetAudience, `${where}/targetAudience`)
       if (service.location !== null) checkText(service.location, `${where}/location`)
       if (service.notes !== null) checkText(service.notes, `${where}/notes`)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
       if (service.isDemo) {
         checkDemoContact(service.contact, where)
         checkDemoUrl(service.sourceUrl, where, 'sourceUrl')
       } else {
+<<<<<<< HEAD
         if (typeof service.sourceUrl !== 'string' || !service.sourceUrl.startsWith('https://')) {
           fail(`${where}: sourceUrl de registro real debe ser una fuente oficial (https://...)`)
         }
@@ -246,6 +317,11 @@ if (services) {
         }
       }
 
+=======
+        checkRealContact(service.contact, where)
+        checkRealUrl(service.sourceUrl, where, 'sourceUrl')
+      }
+>>>>>>> 3d4d599f9a9d9330dad51c7c9903261ab5d00378
       checkLastVerified(service.lastVerified, where)
       checkNoPhoneLike(service.description, `${where}/description`)
       if (service.description.trim().length < 40) {
@@ -290,8 +366,15 @@ if (activities) {
       if (activity.location !== null) checkText(activity.location, `${where}/location`)
       if (activity.requirements !== null) checkText(activity.requirements, `${where}/requirements`)
       if (activity.notes !== null) checkText(activity.notes, `${where}/notes`)
-      checkDemoUrl(activity.sourceUrl, where, 'sourceUrl')
-      checkDemoUrl(activity.registrationUrl, where, 'registrationUrl')
+      if (activity.isDemo) {
+        checkDemoUrl(activity.sourceUrl, where, 'sourceUrl')
+        checkDemoUrl(activity.registrationUrl, where, 'registrationUrl')
+      } else {
+        checkRealUrl(activity.sourceUrl, where, 'sourceUrl')
+        if (activity.registrationUrl !== null && activity.registrationUrl !== undefined) {
+          checkRealUrl(activity.registrationUrl, where, 'registrationUrl')
+        }
+      }
       checkLastVerified(activity.lastVerified, where)
       checkNoPhoneLike(activity.description, `${where}/description`)
 
@@ -332,4 +415,4 @@ if (errors.length > 0) {
   process.exit(1)
 }
 
-console.log('\nValidación correcta: los datos de demostración cumplen las reglas del proyecto.')
+console.log('\nValidación correcta: los datos del proyecto cumplen sus reglas.')
